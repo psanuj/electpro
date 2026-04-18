@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signup — ElectPro</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .landing-nav {
+      width: 100%;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-secondary);
+    }
+
+    .landing-nav .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .landing-nav .brand-icon {
+      margin-bottom: 0;
+      width: 34px;
+      height: 34px;
+      font-size: 16px;
+    }
+
+    .landing-nav .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .auth-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="landing-nav">
+    <a href="index.html" class="brand" style="text-decoration:none;color:var(--text-primary)">
+      <div class="brand-icon">⚡</div>
+      <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700">ElectPro</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+      <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="signup.html" class="btn btn-ghost btn-sm" style="color:var(--accent)">Signup</a>
+    </div>
+  </nav>
+
+  <div class="auth-wrap">
+    <div class="card fade-up fade-up-1" style="max-width:500px;width:100%;text-align:center">
+      <div style="margin-bottom:28px">
+        <div style="font-size:40px;margin-bottom:12px">📝</div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:6px">Choose Your Role
+        </h2>
+        <p class="text-sm text-secondary">Select your role to continue with the signup process.</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px;max-width:320px;margin:0 auto">
+        <a href="student_signup.html" class="btn btn-primary w-full"
+          style="justify-content:center;padding:14px 20px;font-size:15px">
+          🎓 Signup as Student
+        </a>
+        <a href="admin_signup.html" class="btn btn-outline w-full"
+          style="justify-content:center;padding:14px 20px;font-size:15px">
+          🛡️ Signup as Admin
+        </a>
+      </div>
+
+      <div style="margin-top:24px">
+        <p class="text-sm text-secondary">Already have an account?
+          <a href="login.html" style="color:var(--accent);text-decoration:none;font-weight:600">Login here</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

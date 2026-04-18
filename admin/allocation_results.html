@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Allocation Results — ElectPro Admin</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-name">ElectPro</div>
+      <div class="brand-sub">Admin Portal</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="dashboard.html" class="nav-link">
+        <span class="icon">🏠</span> Dashboard
+      </a>
+      <a href="manage_electives.html" class="nav-link">
+        <span class="icon">📚</span> Manage Electives
+      </a>
+      <a href="view_students.html" class="nav-link">
+        <span class="icon">👥</span> View Students
+      </a>
+      <a href="view_preferences.html" class="nav-link">
+        <span class="icon">📋</span> Preferences
+      </a>
+      <a href="allocation_results.html" class="nav-link active">
+        <span class="icon">🎯</span> Allocation Results
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar">AD</div>
+        <div>
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Administrator</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="flex gap-3" style="align-items:center">
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </div>
+        <h1 class="page-title">Allocation Results</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" onclick="runAllocation()">🎯 Run Allocation</button>
+        <span class="badge-pill badge-amber" id="alloc-status">Not Run</span>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <div class="card mb-6 fade-up fade-up-1" style="background:var(--amber-soft);border-color:rgba(245,158,11,0.3)">
+        <div class="flex gap-3" style="align-items:flex-start">
+          <span style="font-size:20px">⚠️</span>
+          <div>
+            <div style="font-weight:600;margin-bottom:4px">Allocation Engine</div>
+            <div class="text-sm text-secondary">Click "Run Allocation" to process student preferences and assign
+              electives based on CGPA ranking and seat availability. This action will overwrite any previous results.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid fade-up fade-up-2">
+        <div class="stat-card blue">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value">85</div>
+          <div class="stat-label">Students Processed</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value">72</div>
+          <div class="stat-label">Successfully Allocated</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-value">13</div>
+          <div class="stat-label">Pending / Unallocated</div>
+        </div>
+      </div>
+
+      <div class="fade-up fade-up-3">
+        <div class="flex-between mb-4">
+          <h3 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700">Final Allocation</h3>
+          <span class="text-sm text-muted">Based on CGPA ranking</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>USN</th>
+                <th>Student Name</th>
+                <th>CGPA</th>
+                <th>Preference #</th>
+                <th>Allocated Elective</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody">
+              <tr>
+                <td>NNM25CS502</td>
+                <td>Priya Patel</td>
+                <td>9.1</td>
+                <td><span class="badge-pill badge-blue">#1</span></td>
+                <td>Machine Learning</td>
+                <td><span class="badge-pill badge-green">Allocated</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS504</td>
+                <td>Sneha Reddy</td>
+                <td>8.9</td>
+                <td><span class="badge-pill badge-blue">#1</span></td>
+                <td>Deep Learning</td>
+                <td><span class="badge-pill badge-green">Allocated</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS501</td>
+                <td>Rahul Sharma</td>
+                <td>8.5</td>
+                <td><span class="badge-pill badge-blue">#1</span></td>
+                <td>Cloud Computing</td>
+                <td><span class="badge-pill badge-green">Allocated</span></td>
+              </tr>
+              <tr>
+                <td>NNM25EC507</td>
+                <td>Deepa Nair</td>
+                <td>8.2</td>
+                <td><span class="badge-pill badge-blue">#2</span></td>
+                <td>IoT Systems</td>
+                <td><span class="badge-pill badge-green">Allocated</span></td>
+              </tr>
+              <tr>
+                <td>NNM25EC503</td>
+                <td>Amit Kumar</td>
+                <td>7.8</td>
+                <td><span class="badge-pill badge-amber">#2</span></td>
+                <td>Signal Processing</td>
+                <td><span class="badge-pill badge-green">Allocated</span></td>
+              </tr>
+              <tr>
+                <td>NNM25ME506</td>
+                <td>Vikram Singh</td>
+                <td>7.5</td>
+                <td><span class="badge-pill badge-blue">#1</span></td>
+                <td>Robotics</td>
+                <td><span class="badge-pill badge-green">Allocated</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS505</td>
+                <td>Anuj Acharya</td>
+                <td>7.1</td>
+                <td><span class="badge-pill badge-blue">#1</span></td>
+                <td>Machine Learning</td>
+                <td><span class="badge-pill badge-green">Allocated</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS508</td>
+                <td>Karthik Menon</td>
+                <td>6.9</td>
+                <td><span class="badge-pill badge-amber">#3</span></td>
+                <td>Blockchain Tech</td>
+                <td><span class="badge-pill badge-amber">Waitlisted</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✅</span>
+    <span id="toast-msg">Done!</span>
+  </div>
+
+  <script src="../script.js"></script>
+  <script>
+    function runAllocation() {
+      document.getElementById('alloc-status').textContent = 'Running...';
+      document.getElementById('alloc-status').className = 'badge-pill badge-blue';
+      setTimeout(function () {
+        document.getElementById('alloc-status').textContent = 'Completed';
+        document.getElementById('alloc-status').className = 'badge-pill badge-green';
+        showToast('✅', 'Allocation completed successfully!');
+      }, 1500);
+    }
+  </script>
+</body>
+
+</html>

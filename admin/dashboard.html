@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — ElectPro Admin</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-name">ElectPro</div>
+      <div class="brand-sub">Admin Portal</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="dashboard.html" class="nav-link active">
+        <span class="icon">🏠</span> Dashboard
+      </a>
+      <a href="manage_electives.html" class="nav-link">
+        <span class="icon">📚</span> Manage Electives
+      </a>
+      <a href="view_students.html" class="nav-link">
+        <span class="icon">👥</span> View Students
+      </a>
+      <a href="view_preferences.html" class="nav-link">
+        <span class="icon">📋</span> Preferences
+      </a>
+      <a href="allocation_results.html" class="nav-link">
+        <span class="icon">🎯</span> Allocation Results
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="avatarInitials">??</div>
+        <div>
+          <div class="user-name" id="sidebarName">Loading...</div>
+          <div class="user-role" id="sidebarMeta">Administrator</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="flex gap-3" style="align-items:center">
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </div>
+        <h1 class="page-title">Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <span class="badge-pill badge-green">System Active</span>
+        <button class="btn btn-danger btn-sm" onclick="handleLogout()">🚪 Logout</button>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <div class="mb-8 fade-up fade-up-1">
+        <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px">
+          Welcome, <span id="greetName">Admin</span> 👋
+        </h2>
+        <p class="text-secondary text-sm">Here's a summary of the elective allocation system.</p>
+      </div>
+
+      <div class="stats-grid fade-up fade-up-2">
+        <div class="stat-card blue">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value">120</div>
+          <div class="stat-label">Total Students</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-icon">📚</div>
+          <div class="stat-value">9</div>
+          <div class="stat-label">Total Electives</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-icon">📋</div>
+          <div class="stat-value">85</div>
+          <div class="stat-label">Preferences Submitted</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value">Not Run</div>
+          <div class="stat-label">Allocation Status</div>
+        </div>
+      </div>
+
+      <div class="grid-2 fade-up fade-up-3">
+
+        <div class="card">
+          <div class="card-title">Allocation Window</div>
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+            <div style="font-size:40px">📅</div>
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800">March 23, 2026</div>
+              <div class="text-sm text-muted">11:59 PM — Final deadline</div>
+            </div>
+          </div>
+          <div class="progress-track" style="margin-bottom:8px">
+            <div class="progress-fill amber" style="width:65%"></div>
+          </div>
+          <div class="flex-between text-sm text-muted">
+            <span>65% of window used</span>
+            <span>5 days remaining</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Quick Actions</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <a href="manage_electives.html" class="btn btn-outline w-full">📚 Manage Electives</a>
+            <a href="view_students.html" class="btn btn-outline w-full">👥 View Students</a>
+            <a href="view_preferences.html" class="btn btn-outline w-full">📋 View Preferences</a>
+            <a href="allocation_results.html" class="btn btn-primary w-full">🎯 Run Allocation</a>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✅</span>
+    <span id="toast-msg">Done!</span>
+  </div>
+
+
+  <script src="../auth.js"></script>
+  <script src="../script.js"></script>
+  <script>
+    (async () => {
+      const session = await requireAuth('admin', '../login.html');
+      if (session) {
+        const firstName = session.name.split(' ')[0];
+        const initials  = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        const greet = document.getElementById('greetName');
+        if (greet) greet.textContent = firstName;
+        const sidebarName = document.getElementById('sidebarName');
+        const sidebarMeta = document.getElementById('sidebarMeta');
+        if (sidebarName) sidebarName.textContent = session.name;
+        if (sidebarMeta) sidebarMeta.textContent = (session.designation || 'Admin') + ' — ' + (session.department || '');
+        const avatar = document.getElementById('avatarInitials');
+        if (avatar) avatar.textContent = initials;
+      }
+    })();
+
+    async function handleLogout() {
+      await logoutUser();
+      window.location.href = '../login.html';
+    }
+  </script>
+</body>
+</html>

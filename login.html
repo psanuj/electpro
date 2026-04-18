@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — ElectPro</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { flex-direction:column; align-items:center; }
+    .landing-nav { width:100%; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background:var(--bg-secondary); }
+    .landing-nav .brand { display:flex; align-items:center; gap:10px; }
+    .landing-nav .brand-icon { margin-bottom:0; width:34px; height:34px; font-size:16px; }
+    .landing-nav .nav-links { display:flex; gap:8px; }
+    .auth-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding:32px 24px; width:100%; }
+  </style>
+</head>
+<body>
+  <nav class="landing-nav">
+    <a href="index.html" class="brand" style="text-decoration:none;color:var(--text-primary)">
+      <div class="brand-icon">⚡</div>
+      <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700">ElectPro</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+      <a href="login.html" class="btn btn-ghost btn-sm" style="color:var(--accent)">Login</a>
+      <a href="signup.html" class="btn btn-outline btn-sm">Signup</a>
+    </div>
+  </nav>
+  <div class="auth-wrap">
+    <div class="card fade-up fade-up-1" style="max-width:460px;width:100%">
+      <div style="text-align:center;margin-bottom:24px">
+        <div style="font-size:40px;margin-bottom:12px">🔑</div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:6px">Welcome Back</h2>
+        <p class="text-sm text-secondary">Enter your credentials to access your account.</p>
+      </div>
+      <form action="#">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="text" id="email" placeholder="Enter your email" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" />
+        </div>
+        <div class="form-group">
+          <label for="role">Role</label>
+          <select id="role">
+            <option value="" disabled selected>Select your role</option>
+            <option value="student">Student</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-primary w-full" style="margin-top:8px" onclick="handleLogin()">Login →</button>
+      </form>
+      <div style="text-align:center;margin-top:20px">
+        <p class="text-sm text-secondary">Don't have an account? <a href="signup.html" style="color:var(--accent);text-decoration:none;font-weight:600">Signup here</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✅</span><span id="toast-msg">Done!</span></div>
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+  <script>
+    async function handleLogin() {
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const role     = document.getElementById('role').value;
+      if (!email || !password) { showToast('⚠️', 'Please enter your email and password.'); return; }
+      if (!role)               { showToast('⚠️', 'Please select your role.'); return; }
+      showToast('⏳', 'Logging in...');
+      const result = await loginUser(email, password, role);
+      if (!result.ok) { showToast('❌', result.msg); return; }
+      showToast('✅', 'Login successful! Redirecting...');
+      setTimeout(() => {
+        if (role === 'student') window.location.href = 'student/student_dashboard.html';
+        else                    window.location.href = 'admin/dashboard.html';
+      }, 1200);
+    }
+  </script>
+</body>
+</html>

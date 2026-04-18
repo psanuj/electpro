@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Preferences — ElectPro Admin</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-name">ElectPro</div>
+      <div class="brand-sub">Admin Portal</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="dashboard.html" class="nav-link">
+        <span class="icon">🏠</span> Dashboard
+      </a>
+      <a href="manage_electives.html" class="nav-link">
+        <span class="icon">📚</span> Manage Electives
+      </a>
+      <a href="view_students.html" class="nav-link">
+        <span class="icon">👥</span> View Students
+      </a>
+      <a href="view_preferences.html" class="nav-link active">
+        <span class="icon">📋</span> Preferences
+      </a>
+      <a href="allocation_results.html" class="nav-link">
+        <span class="icon">🎯</span> Allocation Results
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar">AD</div>
+        <div>
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Administrator</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="flex gap-3" style="align-items:center">
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </div>
+        <h1 class="page-title">Student Preferences</h1>
+      </div>
+      <div class="topbar-right">
+        <span class="badge-pill badge-green">85 Submitted</span>
+        <span class="badge-pill badge-amber">35 Pending</span>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <div class="card mb-6 fade-up fade-up-1" style="background:var(--accent-soft);border-color:var(--accent-glow)">
+        <div class="flex gap-3" style="align-items:flex-start">
+          <span style="font-size:20px">ℹ️</span>
+          <div>
+            <div style="font-weight:600;margin-bottom:4px">Student Preferences Overview</div>
+            <div class="text-sm text-secondary">This page shows all student preference submissions.
+              Each student selects up to 3 electives in order of priority. Use this data to review
+              before running the allocation algorithm.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-6 fade-up fade-up-2">
+        <div class="flex gap-3" style="flex-wrap:wrap;align-items:center">
+          <input type="text" id="search-pref" placeholder="🔍  Search by student name..."
+            style="max-width:280px" oninput="filterPrefs()" />
+          <select id="status-filter" onchange="filterPrefs()" style="max-width:180px">
+            <option value="">All Status</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Pending">Pending</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fade-up fade-up-3">
+        <div class="flex-between mb-4">
+          <h3 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700">Preference Submissions</h3>
+          <span class="text-sm text-muted">85 of 120 students submitted</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>USN</th>
+                <th>Student Name</th>
+                <th>CGPA</th>
+                <th>Preference 1</th>
+                <th>Preference 2</th>
+                <th>Preference 3</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="prefTableBody">
+              <tr>
+                <td>NNM25CS501</td>
+                <td>Rahul Sharma</td>
+                <td>8.5</td>
+                <td>Cloud Computing</td>
+                <td>Machine Learning</td>
+                <td>Cyber Security</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS502</td>
+                <td>Priya Patel</td>
+                <td>9.1</td>
+                <td>Machine Learning</td>
+                <td>Deep Learning</td>
+                <td>Cloud Computing</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+              <tr>
+                <td>NNM25EC503</td>
+                <td>Amit Kumar</td>
+                <td>7.8</td>
+                <td>IoT Systems</td>
+                <td>Signal Processing</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-amber">Pending</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS504</td>
+                <td>Sneha Reddy</td>
+                <td>8.9</td>
+                <td>Deep Learning</td>
+                <td>Machine Learning</td>
+                <td>Blockchain Tech</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS505</td>
+                <td>Anuj Acharya</td>
+                <td>7.1</td>
+                <td>Machine Learning</td>
+                <td>Cloud Computing</td>
+                <td>IoT Systems</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+              <tr>
+                <td>NNM25ME506</td>
+                <td>Vikram Singh</td>
+                <td>7.5</td>
+                <td>Robotics</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-amber">Pending</span></td>
+              </tr>
+              <tr>
+                <td>NNM25EC507</td>
+                <td>Deepa Nair</td>
+                <td>8.2</td>
+                <td>Signal Processing</td>
+                <td>IoT Systems</td>
+                <td>Entrepreneurship</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS508</td>
+                <td>Karthik Menon</td>
+                <td>6.9</td>
+                <td>Cyber Security</td>
+                <td>Cloud Computing</td>
+                <td>Blockchain Tech</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✅</span>
+    <span id="toast-msg">Done!</span>
+  </div>
+
+  <script src="../script.js"></script>
+  <script>
+    function filterPrefs() {
+      var q = document.getElementById('search-pref').value.toLowerCase();
+      var status = document.getElementById('status-filter').value;
+      var rows = document.querySelectorAll('#prefTableBody tr');
+      rows.forEach(function (row) {
+        var name = row.cells[1].textContent.toLowerCase();
+        var rowStatus = row.cells[6].textContent.trim();
+        var matchSearch = !q || name.includes(q);
+        var matchStatus = !status || rowStatus === status;
+        row.style.display = (matchSearch && matchStatus) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+
+</html>

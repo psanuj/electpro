@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Preferences — ElectPro</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-name">ElectPro</div>
+      <div class="brand-sub">Student Portal</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="student_dashboard.html" class="nav-link"><span class="icon">🏠</span> Dashboard</a>
+      <a href="select_electives.html" class="nav-link"><span class="icon">📚</span> Select Electives</a>
+      <a href="preferences.html" class="nav-link active"><span class="icon">📋</span> My Preferences</a>
+      <a href="profile.html" class="nav-link"><span class="icon">👤</span> Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar">AK</div>
+        <div>
+          <div class="user-name">Anuj acharya</div>
+          <div class="user-role">CSE — Sem 4th</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+
+  <div class="main">
+    <header class="topbar">
+      <div class="flex gap-3" style="align-items:center">
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </div>
+        <h1 class="page-title">My Preferences</h1>
+      </div>
+      <div class="topbar-right">
+        <span class="badge-pill badge-green" id="submission-badge">Submitted</span>
+      </div>
+    </header>
+
+    <main class="content">
+
+
+      <div class="card mb-6 fade-up fade-up-1" style="background:var(--green-soft);border-color:rgba(16,185,129,0.3)">
+        <div class="flex gap-3" style="align-items:flex-start">
+          <span style="font-size:20px">✅</span>
+          <div>
+            <div style="font-weight:600;margin-bottom:4px">Preferences Submitted</div>
+            <div class="text-sm text-secondary">Your elective preferences have been recorded. You can drag and reorder
+              them before the deadline. Allocation results will be announced after <strong>March 23, 2026</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2 fade-up fade-up-2" style="margin-bottom:28px">
+
+
+        <div>
+          <div class="flex-between mb-4">
+            <h3 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700">Priority Order</h3>
+            <span class="text-sm text-muted">Drag to reorder</span>
+          </div>
+          <div id="pref-list"></div>
+          <div class="flex gap-3 mt-4" style="margin-top:20px">
+            <button class="btn btn-primary btn-sm" onclick="saveOrder()">Update Order</button>
+            <a href="select_electives.html" class="btn btn-outline btn-sm">Change Electives</a>
+          </div>
+        </div>
+
+
+        <div>
+          <div class="card mb-4">
+            <div class="card-title">Allocation Status</div>
+            <div style="text-align:center;padding:20px 0">
+              <div style="font-size:48px;margin-bottom:12px">⏳</div>
+              <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px">Pending
+                Allocation</div>
+              <div class="text-sm text-muted">Results will be shown here after processing</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Submission Info</div>
+            <div class="info-row">
+              <span class="info-key">Submitted On</span>
+              <span class="info-val">Mar 16, 2026</span>
+            </div>
+            <div class="info-row">
+              <span class="info-key">Last Updated</span>
+              <span class="info-val">Mar 18, 2026</span>
+            </div>
+            <div class="info-row">
+              <span class="info-key">Total Choices</span>
+              <span class="info-val">3 Electives</span>
+            </div>
+            <div class="info-row">
+              <span class="info-key">Deadline</span>
+              <span class="info-val" style="color:var(--amber)">Mar 23, 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="fade-up fade-up-3">
+        <h3 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:16px">Preference Summary
+        </h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Priority</th>
+                <th>Elective</th>
+                <th>Department</th>
+                <th>Credits</th>
+                <th>Faculty</th>
+                <th>Seats Available</th>
+                <th>Chance</th>
+              </tr>
+            </thead>
+            <tbody id="pref-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✅</span>
+    <span id="toast-msg">Done!</span>
+  </div>
+
+  <script src="../script.js"></script>
+  <script>
+    const ALL_ELECTIVES = {
+      1: { name: 'Machine Learning', dept: 'CSE', credits: 3, seats: 8, faculty: 'Dr. Meena Rao' },
+      2: { name: 'Cloud Computing', dept: 'CSE', credits: 3, seats: 12, faculty: 'Prof. Anand S.' },
+      3: { name: 'IoT Systems', dept: 'ECE', credits: 2, seats: 3, faculty: 'Dr. Priya Nair' },
+      4: { name: 'Cyber Security', dept: 'CSE', credits: 3, seats: 15, faculty: 'Prof. Raj Kumar' },
+      5: { name: 'Robotics', dept: 'MECH', credits: 4, seats: 6, faculty: 'Dr. Suresh T.' },
+      6: { name: 'Deep Learning', dept: 'CSE', credits: 3, seats: 10, faculty: 'Dr. Aisha Khan' },
+    };
+
+    let prefOrder = JSON.parse(localStorage.getItem('electro_prefs') || 'null') || [1, 2, 3];
+
+    function chanceLabel(seats) {
+      if (seats >= 12) return '<span class="badge-pill badge-green">High</span>';
+      if (seats >= 6) return '<span class="badge-pill badge-amber">Medium</span>';
+      return '<span class="badge-pill badge-red">Low</span>';
+    }
+
+    function renderPrefList() {
+      const list = document.getElementById('pref-list');
+      list.innerHTML = '';
+      prefOrder.forEach((id, idx) => {
+        const e = ALL_ELECTIVES[id];
+        if (!e) return;
+        const row = document.createElement('div');
+        row.className = 'pref-row';
+        row.draggable = true;
+        row.dataset.id = id;
+        row.innerHTML = `
+      <span class="drag-handle">⠿</span>
+      <div class="pref-rank">${idx + 1}</div>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:14px">${e.name}</div>
+        <div class="text-sm text-muted">${e.dept} · ${e.credits} credits</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="removeItem(${id})" style="color:var(--red);padding:4px 8px">✕</button>
+    `;
+        list.appendChild(row);
+      });
+      enableDragDrop();
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('pref-table-body');
+      tbody.innerHTML = '';
+      prefOrder.forEach((id, idx) => {
+        const e = ALL_ELECTIVES[id];
+        if (!e) return;
+        tbody.innerHTML += `
+      <tr>
+        <td><span class="badge-pill badge-blue">#${idx + 1}</span></td>
+        <td>${e.name}</td>
+        <td>${e.dept}</td>
+        <td>${e.credits}</td>
+        <td>${e.faculty}</td>
+        <td>${e.seats}</td>
+        <td>${chanceLabel(e.seats)}</td>
+      </tr>
+    `;
+      });
+    }
+
+    function removeItem(id) {
+      prefOrder = prefOrder.filter(x => x !== id);
+      renderPrefList();
+    }
+
+    function saveOrder() {
+      localStorage.setItem('electro_prefs', JSON.stringify(prefOrder));
+      showToast('✅', 'Priority order updated!');
+    }
+
+
+    function enableDragDrop() {
+      const rows = document.querySelectorAll('.pref-row');
+      let dragged = null;
+
+      rows.forEach(row => {
+        row.addEventListener('dragstart', () => { dragged = row; row.classList.add('dragging'); });
+        row.addEventListener('dragend', () => row.classList.remove('dragging'));
+        row.addEventListener('dragover', e => { e.preventDefault(); });
+        row.addEventListener('drop', () => {
+          if (dragged && dragged !== row) {
+            const ids = [...document.querySelectorAll('.pref-row')].map(r => +r.dataset.id);
+            const fromIdx = ids.indexOf(+dragged.dataset.id);
+            const toIdx = ids.indexOf(+row.dataset.id);
+            prefOrder.splice(toIdx, 0, prefOrder.splice(fromIdx, 1)[0]);
+            renderPrefList();
+          }
+        });
+      });
+    }
+
+    renderPrefList();
+  </script>
+</body>
+
+</html>

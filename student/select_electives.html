@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Electives — ElectPro</title>
+  <link rel="stylesheet" href="../style.css" />
+</head>
+
+<body>
+
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-name">ElectPro</div>
+      <div class="brand-sub">Student Portal</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Menu</div>
+      <a href="student_dashboard.html" class="nav-link"><span class="icon">🏠</span> Dashboard</a>
+      <a href="select_electives.html" class="nav-link active"><span class="icon">📚</span> Select Electives</a>
+      <a href="preferences.html" class="nav-link"><span class="icon">📋</span> My Preferences</a>
+      <a href="profile.html" class="nav-link"><span class="icon">👤</span> Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar">AK</div>
+        <div>
+          <div class="user-name">Anuj acharya</div>
+          <div class="user-role">CSE — Sem 4th</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+
+  <div class="main">
+    <header class="topbar">
+      <div class="flex gap-3" style="align-items:center">
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </div>
+        <h1 class="page-title">Select Electives</h1>
+      </div>
+      <div class="topbar-right">
+        <span class="badge-pill badge-blue" id="selected-count">0 / 3 Selected</span>
+      </div>
+    </header>
+
+    <main class="content">
+
+
+      <div class="card mb-6 fade-up fade-up-1" style="background:var(--accent-soft);border-color:var(--accent-glow)">
+        <div class="flex gap-3" style="align-items:flex-start">
+          <span style="font-size:20px">ℹ️</span>
+          <div>
+            <div style="font-weight:600;margin-bottom:4px">How to select</div>
+            <div class="text-sm text-secondary">Choose up to <strong>3 electives</strong> in order of preference. Your
+              first choice has the highest priority. Click any card to select or deselect it.</div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="flex gap-3 mb-6 fade-up fade-up-2" style="flex-wrap:wrap;align-items:center">
+        <input type="text" id="search-input" placeholder="🔍  Search electives..." style="max-width:280px"
+          oninput="filterElectives()" />
+        <select id="dept-filter" onchange="filterElectives()" style="max-width:180px">
+          <option value="">All Departments</option>
+          <option value="CSE">CSE</option>
+          <option value="ECE">ECE</option>
+          <option value="MECH">MECH</option>
+          <option value="MBA">MBA</option>
+        </select>
+        <select id="credit-filter" onchange="filterElectives()" style="max-width:160px">
+          <option value="">All Credits</option>
+          <option value="2">2 Credits</option>
+          <option value="3">3 Credits</option>
+          <option value="4">4 Credits</option>
+        </select>
+      </div>
+
+
+      <div id="elective-grid" class="grid-3 fade-up fade-up-3"></div>
+
+
+      <div id="empty-state" style="display:none;text-align:center;padding:60px 0">
+        <div style="font-size:48px;margin-bottom:12px">🔍</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:6px">No electives found
+        </div>
+        <div class="text-sm text-muted">Try adjusting your filters</div>
+      </div>
+
+
+      <div class="divider"></div>
+      <div class="flex-between">
+        <div class="text-sm text-muted">Selected: <span id="sel-names" style="color:var(--text-secondary)">None</span>
+        </div>
+        <div class="flex gap-3">
+          <button class="btn btn-outline" onclick="clearAll()">Clear All</button>
+          <button class="btn btn-primary" onclick="savePreferences()">Save Preferences →</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✅</span>
+    <span id="toast-msg">Done!</span>
+  </div>
+
+  <script src="../script.js"></script>
+  <script>
+    const ELECTIVES = [
+      { id: 1, name: 'Machine Learning', dept: 'CSE', credits: 3, seats: 8, faculty: 'Dr. Meena Rao', tag: 'AI & Data' },
+      { id: 2, name: 'Cloud Computing', dept: 'CSE', credits: 3, seats: 12, faculty: 'Prof. Anand S.', tag: 'Infrastructure' },
+      { id: 3, name: 'IoT Systems', dept: 'ECE', credits: 2, seats: 3, faculty: 'Dr. Priya Nair', tag: 'Embedded' },
+      { id: 4, name: 'Cyber Security', dept: 'CSE', credits: 3, seats: 15, faculty: 'Prof. Raj Kumar', tag: 'Security' },
+      { id: 5, name: 'Robotics', dept: 'MECH', credits: 4, seats: 6, faculty: 'Dr. Suresh T.', tag: 'Automation' },
+      { id: 6, name: 'Deep Learning', dept: 'CSE', credits: 3, seats: 10, faculty: 'Dr. Aisha Khan', tag: 'AI & Data' },
+      { id: 7, name: 'Blockchain Tech', dept: 'CSE', credits: 2, seats: 20, faculty: 'Prof. Vinod M.', tag: 'Web3' },
+      { id: 8, name: 'Signal Processing', dept: 'ECE', credits: 3, seats: 9, faculty: 'Dr. Ravi Menon', tag: 'DSP' },
+      { id: 9, name: 'Entrepreneurship', dept: 'MBA', credits: 2, seats: 25, faculty: 'Prof. Latha S.', tag: 'Business' },
+    ];
+
+    let selected = [];
+
+    function renderElectives(list = ELECTIVES) {
+      const grid = document.getElementById('elective-grid');
+      const empty = document.getElementById('empty-state');
+      grid.innerHTML = '';
+      if (!list.length) { empty.style.display = 'block'; return; }
+      empty.style.display = 'none';
+
+      list.forEach(e => {
+        const isSelected = selected.includes(e.id);
+        const isFull = selected.length >= 3 && !isSelected;
+        const div = document.createElement('div');
+        div.className = 'elective-card' + (isSelected ? ' selected' : '');
+        div.style.opacity = isFull ? '0.45' : '1';
+        div.style.pointerEvents = isFull ? 'none' : 'auto';
+        div.innerHTML = `
+      <span class="elective-tag">${e.tag}</span>
+      <div class="elective-title">${e.name}</div>
+      <div class="elective-meta">
+        <span>🏫 ${e.dept}</span>
+        <span>📖 ${e.credits} cr</span>
+        <span>💺 ${e.seats} seats</span>
+      </div>
+      <div class="text-sm text-muted" style="margin-top:10px">👨‍🏫 ${e.faculty}</div>
+    `;
+        div.onclick = () => toggleSelect(e.id);
+        grid.appendChild(div);
+      });
+
+      updateCounter();
+    }
+
+    function toggleSelect(id) {
+      if (selected.includes(id)) {
+        selected = selected.filter(x => x !== id);
+      } else {
+        if (selected.length >= 3) { showToast('⚠️', 'Max 3 electives allowed'); return; }
+        selected.push(id);
+      }
+      filterElectives();
+    }
+
+    function updateCounter() {
+      document.getElementById('selected-count').textContent = `${selected.length} / 3 Selected`;
+      const names = selected.map(id => ELECTIVES.find(e => e.id === id)?.name).join(', ');
+      document.getElementById('sel-names').textContent = names || 'None';
+    }
+
+    function filterElectives() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      const dept = document.getElementById('dept-filter').value;
+      const credit = document.getElementById('credit-filter').value;
+      const filtered = ELECTIVES.filter(e =>
+        (!q || e.name.toLowerCase().includes(q) || e.tag.toLowerCase().includes(q)) &&
+        (!dept || e.dept === dept) &&
+        (!credit || e.credits == credit)
+      );
+      renderElectives(filtered);
+    }
+
+    function clearAll() { selected = []; filterElectives(); }
+
+    function savePreferences() {
+      if (!selected.length) { showToast('⚠️', 'Select at least one elective'); return; }
+      localStorage.setItem('electro_prefs', JSON.stringify(selected));
+      showToast('✅', 'Preferences saved successfully!');
+      setTimeout(() => window.location.href = 'preferences.html', 1200);
+    }
+
+    renderElectives();
+  </script>
+</body>
+
+</html>
