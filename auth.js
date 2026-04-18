@@ -1,38 +1,38 @@
 // ─── ELECTPRO FRONTEND AUTH (auth.js) ────────────────────────────────────────
-// Talks to the real backend API instead of localStorage
+// Talks to the real backend API
 
 async function registerUser(userData) {
   try {
     const res = await fetch('/api/auth/signup', {
-      method:      'POST',
-      headers:     { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body:        JSON.stringify(userData)
+      body: JSON.stringify(userData)
     });
     return await res.json();
   } catch (err) {
-    return { ok: false, msg: 'Cannot connect to server. Make sure server.js is running.' };
+    return { ok: false, msg: 'Cannot connect to server. Make sure server is running.' };
   }
 }
 
 async function loginUser(email, password, role) {
   try {
     const res = await fetch('/api/auth/login', {
-      method:      'POST',
-      headers:     { 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body:        JSON.stringify({ email, password, role })
+      body: JSON.stringify({ email, password, role })
     });
     return await res.json();
   } catch (err) {
-    return { ok: false, msg: 'Cannot connect to server. Make sure server.js is running.' };
+    return { ok: false, msg: 'Cannot connect to server. Make sure server is running.' };
   }
 }
 
 async function logoutUser() {
   try {
     await fetch('/api/auth/logout', {
-      method:      'POST',
+      method: 'POST',
       credentials: 'include'
     });
   } catch (err) {

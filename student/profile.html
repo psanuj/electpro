@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profile — ElectPro</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
-
 <body>
-
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
@@ -26,15 +23,14 @@
     </nav>
     <div class="sidebar-footer">
       <div class="user-chip">
-        <div class="avatar">AA</div>
+        <div class="avatar" id="avatarInitials">??</div>
         <div>
-          <div class="user-name">Anuj acharya</div>
-          <div class="user-role">CSE — Sem 4th</div>
+          <div class="user-name" id="sidebarName">Loading...</div>
+          <div class="user-role" id="sidebarMeta">—</div>
         </div>
       </div>
     </div>
   </aside>
-
 
   <div class="main">
     <header class="topbar">
@@ -46,182 +42,101 @@
       </div>
       <div class="topbar-right">
         <button class="btn btn-outline btn-sm" id="edit-btn" onclick="toggleEdit()">✏️ Edit Profile</button>
+        <button class="btn btn-danger btn-sm" onclick="handleLogout()">🚪 Logout</button>
       </div>
     </header>
 
     <main class="content">
 
-
       <div class="profile-header fade-up fade-up-1">
-        <div class="avatar avatar-lg">AA</div>
+        <div class="avatar avatar-lg" id="profile-avatar">??</div>
         <div style="flex:1">
-          <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800" id="display-name">Anuj acharya</div>
-          <div class="text-secondary" style="margin:4px 0 10px" id="display-dept">B.Tech Computer Science · Semester 4th
-          </div>
+          <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800" id="display-name">Loading...</div>
+          <div class="text-secondary" style="margin:4px 0 10px" id="display-dept">—</div>
           <div class="flex gap-3" style="flex-wrap:wrap">
-            <span class="badge-pill badge-blue">Roll No: NNM25CS505</span>
-            <span class="badge-pill badge-green">CGPA:7.1</span>
-            <span class="badge-pill" style="background:var(--bg-secondary);color:var(--text-muted)">Batch:
-              2021–25</span>
+            <span class="badge-pill badge-blue" id="display-usn">USN: —</span>
+            <span class="badge-pill badge-green" id="display-cgpa">CGPA: —</span>
           </div>
         </div>
       </div>
 
       <div class="grid-2 fade-up fade-up-2">
 
-
+        <!-- VIEW SECTION -->
         <div id="view-section">
           <div class="card mb-4">
             <div class="card-title">Personal Info</div>
-            <div class="info-row">
-              <span class="info-key">Full Name</span>
-              <span class="info-val" id="v-name">Anuj acharya</span>
-            </div>
-            <div class="info-row">
-              <span class="info-key">Roll Number</span>
-              <span class="info-val">NNM25CS505</span>
-            </div>
-            <div class="info-row">
-              <span class="info-key">Email</span>
-              <span class="info-val" id="v-email">anujacharya@college.edu</span>
-            </div>
-            <div class="info-row">
-              <span class="info-key">Phone</span>
-              <span class="info-val" id="v-phone">+91 98765 43210</span>
-            </div>
-            <div class="info-row">
-              <span class="info-key">Date of Birth</span>
-              <span class="info-val" id="v-dob">4 Aug 2007</span>
-            </div>
+            <div class="info-row"><span class="info-key">Full Name</span><span class="info-val" id="v-name">—</span></div>
+            <div class="info-row"><span class="info-key">USN</span><span class="info-val" id="v-usn">—</span></div>
+            <div class="info-row"><span class="info-key">Email</span><span class="info-val" id="v-email">—</span></div>
+            <div class="info-row"><span class="info-key">Phone</span><span class="info-val" id="v-phone">—</span></div>
+            <div class="info-row"><span class="info-key">Date of Birth</span><span class="info-val" id="v-dob">—</span></div>
           </div>
-
           <div class="card">
             <div class="card-title">Academic Info</div>
-            <div class="info-row">
-              <span class="info-key">Department</span>
-              <span class="info-val" id="v-dept">Computer Science & Engg.</span>
-            </div>
-            <div class="info-row">
-              <span class="info-key">Semester</span>
-              <span class="info-val">4th Semester</span>
-            </div>
-            <div class="info-row">
-              <span class="info-key">Batch</span>
-              <span class="info-val">2025 – 2028</span>
-            </div>
-            <div class="info-row">
-              <span class="info-key">CGPA</span>
-              <span class="info-val" style="color:var(--green)" id="v-cgpa">7.1 / 10</span>
-            </div>
-            <div class="info-row">
-              <span class="info-key">Advisor</span>
-              <span class="info-val" id="v-advisor">Ms jyoti priya</span>
-            </div>
+            <div class="info-row"><span class="info-key">Branch</span><span class="info-val" id="v-branch">—</span></div>
+            <div class="info-row"><span class="info-key">Semester</span><span class="info-val" id="v-semester">—</span></div>
+            <div class="info-row"><span class="info-key">CGPA</span><span class="info-val" style="color:var(--green)" id="v-cgpa">—</span></div>
+            <div class="info-row"><span class="info-key">Advisor</span><span class="info-val" id="v-advisor">—</span></div>
           </div>
         </div>
 
-
+        <!-- EDIT SECTION -->
         <div id="edit-section" style="display:none">
           <div class="card mb-4">
             <div class="card-title">Edit Personal Info</div>
-            <div class="form-group">
-              <label>Full Name</label>
-              <input type="text" id="e-name" value="Anuj acharya" />
-            </div>
-            <div class="form-group">
-              <label>Email Address</label>
-              <input type="email" id="e-email" value="anujacharya@college.edu" />
-            </div>
-            <div class="form-group">
-              <label>Phone Number</label>
-              <input type="tel" id="e-phone" value="+91 98765 43210" />
-            </div>
-            <div class="form-group">
-              <label>Date of Birth</label>
-              <input type="date" id="e-dob" value="2007-08-4" />
-            </div>
+            <div class="form-group"><label>Full Name</label><input type="text" id="e-name" /></div>
+            <div class="form-group"><label>Phone Number</label><input type="tel" id="e-phone" /></div>
+            <div class="form-group"><label>Date of Birth</label><input type="date" id="e-dob" /></div>
           </div>
-
           <div class="card mb-4">
             <div class="card-title">Academic Info</div>
             <div class="form-group">
               <label>Department</label>
               <select id="e-dept">
-                <option selected>Computer Science & Engg.</option>
+                <option>Computer Science & Engg.</option>
                 <option>Electronics & Communication</option>
                 <option>Mechanical Engineering</option>
                 <option>Civil Engineering</option>
               </select>
             </div>
-            <div class="form-group">
-              <label>Faculty Advisor</label>
-              <input type="text" id="e-advisor" value="Ms jyoti priya" />
-            </div>
-            <div class="form-group">
-              <label>CGPA</label>
-              <input type="number" id="e-cgpa" value="7.1" min="0" max="10" step="0.1" />
-            </div>
+            <div class="form-group"><label>Faculty Advisor</label><input type="text" id="e-advisor" /></div>
+            <div class="form-group"><label>CGPA</label><input type="number" id="e-cgpa" min="0" max="10" step="0.1" /></div>
           </div>
-
           <div class="flex gap-3">
             <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
             <button class="btn btn-outline" onclick="cancelEdit()">Cancel</button>
           </div>
         </div>
 
-
+        <!-- RIGHT SIDE -->
         <div>
-
           <div class="card mb-4">
             <div class="card-title">Academic Standing</div>
             <div class="flex-between mb-4" style="margin-bottom:10px">
               <span class="text-sm text-secondary">CGPA</span>
-              <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--green)"
-                id="cgpa-display">7.1</span>
+              <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--green)" id="cgpa-display">—</span>
             </div>
             <div class="progress-track" style="margin-bottom:18px">
-              <div class="progress-fill green" id="cgpa-bar" style="width:86%"></div>
-            </div>
-            <div class="info-row" style="padding:10px 0">
-              <span class="info-key">Standing</span>
-              <span class="info-val" style="color:var(--green)">Distinction</span>
-            </div>
-            <div class="info-row" style="padding:10px 0">
-              <span class="info-key">Credits Completed</span>
-              <span class="info-val">142 / 180</span>
-            </div>
-            <div class="progress-track">
-              <div class="progress-fill" style="width:79%"></div>
+              <div class="progress-fill green" id="cgpa-bar" style="width:0%"></div>
             </div>
           </div>
 
-
           <div class="card">
             <div class="card-title">Security</div>
-            <div class="form-group">
-              <label>Current Password</label>
-              <input type="password" id="cur-pass" placeholder="••••••••" />
-            </div>
-            <div class="form-group">
-              <label>New Password</label>
-              <input type="password" id="new-pass" placeholder="Min. 8 characters" />
-            </div>
-            <div class="form-group">
-              <label>Confirm Password</label>
-              <input type="password" id="con-pass" placeholder="Re-enter new password" />
-            </div>
+            <div class="form-group"><label>Current Password</label><input type="password" id="cur-pass" placeholder="••••••••" /></div>
+            <div class="form-group"><label>New Password</label><input type="password" id="new-pass" placeholder="Min. 8 characters" /></div>
+            <div class="form-group"><label>Confirm Password</label><input type="password" id="con-pass" placeholder="Re-enter new password" /></div>
             <button class="btn btn-outline w-full" onclick="changePassword()">Update Password</button>
           </div>
         </div>
 
       </div>
 
-
       <div class="divider fade-up fade-up-4"></div>
       <div class="flex-between fade-up fade-up-4">
-        <span class="text-sm text-muted">Logged in as <strong
-            style="color:var(--text-secondary)">anujacharya@college.edu</strong></span>
-        <a href="../login.html" class="btn btn-danger btn-sm">🚪 Logout</a>
+        <span class="text-sm text-muted">Logged in as <strong style="color:var(--text-secondary)" id="footer-email">—</strong></span>
+        <button class="btn btn-danger btn-sm" onclick="handleLogout()">🚪 Logout</button>
       </div>
 
     </main>
@@ -232,9 +147,60 @@
     <span id="toast-msg">Done!</span>
   </div>
 
+  <script src="../auth.js"></script>
   <script src="../script.js"></script>
   <script>
+    let currentUser = null;
     let editing = false;
+
+    (async () => {
+      const session = await requireAuth('student', '../login.html');
+      if (!session) return;
+      currentUser = session;
+      loadProfile(session);
+    })();
+
+    function loadProfile(user) {
+      const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+      // Sidebar
+      document.getElementById('avatarInitials').textContent  = initials;
+      document.getElementById('sidebarName').textContent     = user.name;
+      document.getElementById('sidebarMeta').textContent     = (user.branch || '') + ' — Sem ' + (user.semester || '');
+
+      // Profile header
+      document.getElementById('profile-avatar').textContent  = initials;
+      document.getElementById('display-name').textContent    = user.name;
+      document.getElementById('display-dept').textContent    = (user.branch || '—') + ' · Semester ' + (user.semester || '—');
+      document.getElementById('display-usn').textContent     = 'USN: ' + (user.usn || '—');
+      document.getElementById('display-cgpa').textContent    = 'CGPA: ' + (user.cgpa || '—');
+
+      // View section
+      document.getElementById('v-name').textContent     = user.name;
+      document.getElementById('v-usn').textContent      = user.usn     || '—';
+      document.getElementById('v-email').textContent    = user.email;
+      document.getElementById('v-phone').textContent    = user.phone   || '—';
+      document.getElementById('v-dob').textContent      = user.dob     || '—';
+      document.getElementById('v-branch').textContent   = user.branch  || '—';
+      document.getElementById('v-semester').textContent = user.semester || '—';
+      document.getElementById('v-cgpa').textContent     = (user.cgpa || '—') + ' / 10';
+      document.getElementById('v-advisor').textContent  = user.advisor || '—';
+
+      // CGPA bar
+      const cgpa = parseFloat(user.cgpa) || 0;
+      document.getElementById('cgpa-display').textContent = cgpa || '—';
+      document.getElementById('cgpa-bar').style.width = (cgpa * 10) + '%';
+
+      // Footer
+      document.getElementById('footer-email').textContent = user.email;
+
+      // Pre-fill edit form
+      document.getElementById('e-name').value    = user.name    || '';
+      document.getElementById('e-phone').value   = user.phone   || '';
+      document.getElementById('e-dob').value     = user.dob     || '';
+      document.getElementById('e-advisor').value = user.advisor || '';
+      document.getElementById('e-cgpa').value    = user.cgpa    || '';
+    }
 
     function toggleEdit() {
       editing = !editing;
@@ -250,43 +216,64 @@
       document.getElementById('edit-btn').textContent = '✏️ Edit Profile';
     }
 
-    function saveProfile() {
-      const name = document.getElementById('e-name').value.trim();
-      const email = document.getElementById('e-email').value.trim();
-      const phone = document.getElementById('e-phone').value.trim();
-      const dept = document.getElementById('e-dept').value;
-      const advisor = document.getElementById('e-advisor').value.trim();
-      const cgpa = parseFloat(document.getElementById('e-cgpa').value);
+    async function saveProfile() {
+      const name     = document.getElementById('e-name').value.trim();
+      const phone    = document.getElementById('e-phone').value.trim();
+      const dob      = document.getElementById('e-dob').value;
+      const dept     = document.getElementById('e-dept').value;
+      const advisor  = document.getElementById('e-advisor').value.trim();
+      const cgpa     = document.getElementById('e-cgpa').value;
 
-      if (!name || !email) { showToast('⚠️', 'Name and email are required'); return; }
+      if (!name) { showToast('⚠️', 'Name is required'); return; }
 
-      document.getElementById('v-name').textContent = name;
-      document.getElementById('v-email').textContent = email;
-      document.getElementById('v-phone').textContent = phone;
-      document.getElementById('v-dept').textContent = dept;
-      document.getElementById('v-advisor').textContent = advisor;
-      document.getElementById('v-cgpa').textContent = cgpa + ' / 10';
-      document.getElementById('display-name').textContent = name;
-      document.getElementById('cgpa-display').textContent = cgpa;
-      document.getElementById('cgpa-bar').style.width = (cgpa * 10) + '%';
+      showToast('⏳', 'Saving...');
 
+      const res = await fetch('/api/auth/update-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ name, phone, dob, department: dept, advisor, cgpa })
+      });
+      const result = await res.json();
+
+      if (!result.ok) { showToast('❌', result.msg); return; }
+
+      currentUser = result.user;
+      loadProfile(result.user);
       cancelEdit();
       showToast('✅', 'Profile updated successfully!');
     }
 
-    function changePassword() {
+    async function changePassword() {
       const cur = document.getElementById('cur-pass').value;
-      const nw = document.getElementById('new-pass').value;
-      const cn = document.getElementById('con-pass').value;
+      const nw  = document.getElementById('new-pass').value;
+      const cn  = document.getElementById('con-pass').value;
       if (!cur || !nw || !cn) { showToast('⚠️', 'All password fields are required'); return; }
-      if (nw !== cn) { showToast('❌', 'New passwords do not match'); return; }
-      if (nw.length < 8) { showToast('⚠️', 'Password must be at least 8 characters'); return; }
+      if (nw !== cn)           { showToast('❌', 'New passwords do not match'); return; }
+      if (nw.length < 8)       { showToast('⚠️', 'Password must be at least 8 characters'); return; }
+
+      showToast('⏳', 'Updating password...');
+
+      const res = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ currentPassword: cur, newPassword: nw })
+      });
+      const result = await res.json();
+
+      if (!result.ok) { showToast('❌', result.msg); return; }
+
       document.getElementById('cur-pass').value = '';
       document.getElementById('new-pass').value = '';
       document.getElementById('con-pass').value = '';
       showToast('✅', 'Password changed successfully!');
     }
+
+    async function handleLogout() {
+      await logoutUser();
+      window.location.href = '../login.html';
+    }
   </script>
 </body>
-
 </html>

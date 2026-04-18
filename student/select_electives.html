@@ -26,10 +26,10 @@
     </nav>
     <div class="sidebar-footer">
       <div class="user-chip">
-        <div class="avatar">AK</div>
+        <div class="avatar" id="avatarInitials">??</div>
         <div>
-          <div class="user-name">Anuj acharya</div>
-          <div class="user-role">CSE — Sem 4th</div>
+          <div class="user-name" id="sidebarName">Loading...</div>
+          <div class="user-role" id="sidebarMeta">—</div>
         </div>
       </div>
     </div>
@@ -112,7 +112,24 @@
     <span id="toast-msg">Done!</span>
   </div>
 
+  <script src="../auth.js"></script>
   <script src="../script.js"></script>
+  <script>
+    (async () => {
+      const session = await requireAuth('student', '../login.html');
+      if (session) {
+        const initials = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        const el = id => document.getElementById(id);
+        if (el('avatarInitials')) el('avatarInitials').textContent = initials;
+        if (el('sidebarName'))    el('sidebarName').textContent    = session.name;
+        if (el('sidebarMeta'))    el('sidebarMeta').textContent    = (session.branch || '') + ' — Sem ' + (session.semester || '');
+      }
+    })();
+    async function handleLogout() {
+      await logoutUser();
+      window.location.href = '../login.html';
+    }
+  </script>
   <script>
     const ELECTIVES = [
       { id: 1, name: 'Machine Learning', dept: 'CSE', credits: 3, seats: 8, faculty: 'Dr. Meena Rao', tag: 'AI & Data' },
@@ -191,7 +208,13 @@
 
     function savePreferences() {
       if (!selected.length) { showToast('⚠️', 'Select at least one elective'); return; }
-      localStorage.setItem('electro_prefs', JSON.stringify(selected));
+      // Save to backend
+      fetch('/api/auth/save-preferences', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ preferences: selected })
+      });
       showToast('✅', 'Preferences saved successfully!');
       setTimeout(() => window.location.href = 'preferences.html', 1200);
     }

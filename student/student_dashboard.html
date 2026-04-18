@@ -203,24 +203,29 @@
   <script src="../auth.js"></script>
   <script src="../script.js"></script>
   <script>
-    (async () => {
-      const session = await requireAuth('student', '../login.html');
-      if (session) {
-        const firstName = session.name.split(' ')[0];
-        const initials  = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-        const greet = document.getElementById('greetName');
-        if (greet) greet.textContent = firstName;
-        const sidebarName = document.getElementById('sidebarName');
-        const sidebarMeta = document.getElementById('sidebarMeta');
-        if (sidebarName) sidebarName.textContent = session.name;
-        if (sidebarMeta) sidebarMeta.textContent = (session.branch || '') + ' — Sem ' + (session.semester || '');
-        const avatar = document.getElementById('avatarInitials');
-        if (avatar) avatar.textContent = initials;
-      }
-    })();
+    // Protect page - must be logged in as student
+    const session = requireAuth('student', '../login.html');
+    if (session) {
+      const firstName = session.name.split(' ')[0];
+      const initials  = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+      // Greeting
+      const greet = document.getElementById('greetName');
+      if (greet) greet.textContent = firstName;
+
+      // Sidebar name + meta
+      const sidebarName = document.getElementById('sidebarName');
+      const sidebarMeta = document.getElementById('sidebarMeta');
+      if (sidebarName) sidebarName.textContent = session.name;
+      if (sidebarMeta) sidebarMeta.textContent = (session.branch || '') + ' — Sem ' + (session.semester || '');
+
+      // Avatar initials
+      const avatar = document.getElementById('avatarInitials');
+      if (avatar) avatar.textContent = initials;
+    }
 
     async function handleLogout() {
-      await logoutUser();
+      logoutUser();
       window.location.href = '../login.html';
     }
   </script>
