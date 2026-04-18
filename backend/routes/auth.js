@@ -1,7 +1,7 @@
-const express = require('express');
-const router  = express.Router();
-const bcrypt  = require('bcryptjs');
-const { sql, poolPromise } = require('../db');
+const express  = require('express');
+const router   = express.Router();
+const bcrypt   = require('bcryptjs');
+const pool     = require('../db');
 
 // ─── SIGNUP ───────────────────────────────────────────────────────────────────
 router.post('/signup', async (req, res) => {
@@ -12,33 +12,21 @@ router.post('/signup', async (req, res) => {
       return res.json({ ok: false, msg: 'Please fill in all required fields.' });
     }
 
-    const pool = await poolPromise;
-
     // Check if email already exists
-    const existing = await pool.request()
-      .input('email', sql.NVarChar, email.toLowerCase())
-      .query('SELECT id FROM Users WHERE email = @email');
-
-    if (existing.recordset.length > 0) {
+    const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email.toLowerCase()]);
+    if (existing.rows.length > 0) {
       return res.json({ ok: false, msg: 'This email is already registered. Please login instead.' });
     }
 
-    // Hash the password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert user
-    await pool.request()
-      .input('name',        sql.NVarChar, name)
-      .input('email',       sql.NVarChar, email.toLowerCase())
-      .input('password',    sql.NVarChar, hashedPassword)
-      .input('role',        sql.NVarChar, role)
-      .input('usn',         sql.NVarChar, usn         || null)
-      .input('branch',      sql.NVarChar, branch      || null)
-      .input('semester',    sql.NVarChar, semester    || null)
-      .input('designation', sql.NVarChar, designation || null)
-      .input('department',  sql.NVarChar, department  || null)
-      .query(`INSERT INTO Users (name, email, password, role, usn, branch, semester, designation, department)
-              VALUES (@name, @email, @password, @role, @usn, @branch, @semester, @designation, @department)`);
+    await pool.query(
+      `INSERT INTO users (name, email, password, role, usn, branch, semester, designation, department)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      [name, email.toLowerCase(), hashedPassword, role, usn||null, branch||null, semester||null, designation||null, department||null]
+    );
 
     return res.json({ ok: true, msg: 'Account created successfully!' });
 
@@ -62,18 +50,13 @@ router.post('/login', async (req, res) => {
       return res.json({ ok: false, msg: 'You are already logged in with this account!' });
     }
 
-    const pool = await poolPromise;
-
-    // Find user by email
-    const result = await pool.request()
-      .input('email', sql.NVarChar, email.toLowerCase())
-      .query('SELECT * FROM Users WHERE email = @email');
-
-    if (result.recordset.length === 0) {
+    // Find user
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email.toLowerCase()]);
+    if (result.rows.length === 0) {
       return res.json({ ok: false, msg: 'No account found with this email. Please signup first.' });
     }
 
-    const user = result.recordset[0];
+    const user = result.rows[0];
 
     // Check password
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -114,7 +97,7 @@ router.post('/logout', (req, res) => {
   });
 });
 
-// ─── GET SESSION (check if logged in) ─────────────────────────────────────────
+// ─── GET SESSION ──────────────────────────────────────────────────────────────
 router.get('/session', (req, res) => {
   if (req.session.user) {
     return res.json({ ok: true, user: req.session.user });

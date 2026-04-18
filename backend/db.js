@@ -1,19 +1,12 @@
-const sql = require('mssql/msnodesqlv8');
+const { Pool } = require('pg');
 
-// Using ODBC Driver which is already installed with SQL Server
-const config = {
-  connectionString: 'Driver={ODBC Driver 17 for SQL Server};Server=localhost\\SQLEXPRESS;Database=ElectProDB;Trusted_Connection=yes;TrustServerCertificate=yes;'
-};
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
+});
 
-const poolPromise = new sql.ConnectionPool(config)
-  .connect()
-  .then(pool => {
-    console.log('✅ Connected to SQL Server successfully!');
-    return pool;
-  })
-  .catch(err => {
-    console.error('❌ Database connection failed:', err.message);
-    process.exit(1);
-  });
+pool.connect()
+  .then(() => console.log('✅ Connected to PostgreSQL successfully!'))
+  .catch(err => console.error('❌ Database connection failed:', err.message));
 
-module.exports = { sql, poolPromise };
+module.exports = pool;
