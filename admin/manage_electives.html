@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Manage Electives — ElectPro Admin</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
-
 <body>
 
   <aside class="sidebar" id="sidebar">
@@ -16,32 +14,20 @@
       <div class="brand-name">ElectPro</div>
       <div class="brand-sub">Admin Portal</div>
     </div>
-
     <nav class="sidebar-nav">
       <div class="nav-section-label">Menu</div>
-      <a href="dashboard.html" class="nav-link">
-        <span class="icon">🏠</span> Dashboard
-      </a>
-      <a href="manage_electives.html" class="nav-link active">
-        <span class="icon">📚</span> Manage Electives
-      </a>
-      <a href="view_students.html" class="nav-link">
-        <span class="icon">👥</span> View Students
-      </a>
-      <a href="view_preferences.html" class="nav-link">
-        <span class="icon">📋</span> Preferences
-      </a>
-      <a href="allocation_results.html" class="nav-link">
-        <span class="icon">🎯</span> Allocation Results
-      </a>
+      <a href="dashboard.html" class="nav-link"><span class="icon">🏠</span> Dashboard</a>
+      <a href="manage_electives.html" class="nav-link active"><span class="icon">📚</span> Manage Electives</a>
+      <a href="view_students.html" class="nav-link"><span class="icon">👥</span> View Students</a>
+      <a href="view_preferences.html" class="nav-link"><span class="icon">📋</span> Preferences</a>
+      <a href="allocation_results.html" class="nav-link"><span class="icon">🎯</span> Allocation Results</a>
     </nav>
-
     <div class="sidebar-footer">
       <div class="user-chip">
-        <div class="avatar">AD</div>
+        <div class="avatar" id="avatarInitials">??</div>
         <div>
-          <div class="user-name">Admin User</div>
-          <div class="user-role">Administrator</div>
+          <div class="user-name" id="sidebarName">Loading...</div>
+          <div class="user-role" id="sidebarMeta">Administrator</div>
         </div>
       </div>
     </div>
@@ -50,53 +36,26 @@
   <div class="main">
     <header class="topbar">
       <div class="flex gap-3" style="align-items:center">
-        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
-          <span></span><span></span><span></span>
-        </div>
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></div>
         <h1 class="page-title">Manage Electives</h1>
       </div>
       <div class="topbar-right">
         <button class="btn btn-primary btn-sm" onclick="showAddForm()">+ Add Elective</button>
+        <button class="btn btn-danger btn-sm" onclick="handleLogout()">🚪 Logout</button>
       </div>
     </header>
 
     <main class="content">
 
-      <div class="card mb-6 fade-up fade-up-1" style="background:var(--accent-soft);border-color:var(--accent-glow)">
-        <div class="flex gap-3" style="align-items:flex-start">
-          <span style="font-size:20px">ℹ️</span>
-          <div>
-            <div style="font-weight:600;margin-bottom:4px">Manage Electives</div>
-            <div class="text-sm text-secondary">Add, edit, or remove elective courses. Changes will be reflected in
-              the student selection page.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Add Elective Form -->
-      <div class="card mb-6 fade-up fade-up-2" id="add-form" style="display:none">
+      <!-- Add Form -->
+      <div class="card mb-6 fade-up fade-up-1" id="add-form" style="display:none">
         <div class="card-title">Add New Elective</div>
         <div class="grid-2">
-          <div class="form-group">
-            <label>Elective Name</label>
-            <input type="text" id="electiveName" placeholder="e.g. Machine Learning" />
-          </div>
-          <div class="form-group">
-            <label>Department</label>
-            <input type="text" id="electiveDept" placeholder="e.g. CSE" />
-          </div>
-          <div class="form-group">
-            <label>Available Seats</label>
-            <input type="number" id="electiveSeats" placeholder="e.g. 30" />
-          </div>
-          <div class="form-group">
-            <label>Credits</label>
-            <input type="number" id="electiveCredits" placeholder="e.g. 3" />
-          </div>
-          <div class="form-group">
-            <label>Faculty</label>
-            <input type="text" id="electiveFaculty" placeholder="e.g. Dr. Meena Rao" />
-          </div>
+          <div class="form-group"><label>Elective Name</label><input type="text" id="electiveName" placeholder="e.g. Machine Learning" /></div>
+          <div class="form-group"><label>Department</label><input type="text" id="electiveDept" placeholder="e.g. CSE" /></div>
+          <div class="form-group"><label>Available Seats</label><input type="number" id="electiveSeats" placeholder="e.g. 30" /></div>
+          <div class="form-group"><label>Credits</label><input type="number" id="electiveCredits" placeholder="e.g. 3" /></div>
+          <div class="form-group"><label>Faculty</label><input type="text" id="electiveFaculty" placeholder="e.g. Dr. Meena Rao" /></div>
         </div>
         <div class="flex gap-3" style="margin-top:8px">
           <button class="btn btn-primary" onclick="addElective()">Add Elective</button>
@@ -105,10 +64,10 @@
       </div>
 
       <!-- Electives Table -->
-      <div class="fade-up fade-up-3">
+      <div class="fade-up fade-up-2">
         <div class="flex-between mb-4">
           <h3 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700">Elective List</h3>
-          <span class="text-sm text-muted" id="elective-count">9 electives</span>
+          <span class="text-sm text-muted" id="elective-count">Loading...</span>
         </div>
         <div class="table-wrap">
           <table>
@@ -124,87 +83,7 @@
               </tr>
             </thead>
             <tbody id="electiveTableBody">
-              <tr>
-                <td>1</td>
-                <td>Machine Learning</td>
-                <td>CSE</td>
-                <td>3</td>
-                <td>8</td>
-                <td>Dr. Meena Rao</td>
-                <td><button class="btn btn-danger btn-sm">Delete</button></td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Cloud Computing</td>
-                <td>CSE</td>
-                <td>3</td>
-                <td>12</td>
-                <td>Prof. Anand S.</td>
-                <td><button class="btn btn-danger btn-sm">Delete</button></td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>IoT Systems</td>
-                <td>ECE</td>
-                <td>2</td>
-                <td>3</td>
-                <td>Dr. Priya Nair</td>
-                <td><button class="btn btn-danger btn-sm">Delete</button></td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Cyber Security</td>
-                <td>CSE</td>
-                <td>3</td>
-                <td>15</td>
-                <td>Prof. Raj Kumar</td>
-                <td><button class="btn btn-danger btn-sm">Delete</button></td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>Robotics</td>
-                <td>MECH</td>
-                <td>4</td>
-                <td>6</td>
-                <td>Dr. Suresh T.</td>
-                <td><button class="btn btn-danger btn-sm">Delete</button></td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td>Deep Learning</td>
-                <td>CSE</td>
-                <td>3</td>
-                <td>10</td>
-                <td>Dr. Aisha Khan</td>
-                <td><button class="btn btn-danger btn-sm">Delete</button></td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td>Blockchain Tech</td>
-                <td>CSE</td>
-                <td>2</td>
-                <td>20</td>
-                <td>Prof. Vinod M.</td>
-                <td><button class="btn btn-danger btn-sm">Delete</button></td>
-              </tr>
-              <tr>
-                <td>8</td>
-                <td>Signal Processing</td>
-                <td>ECE</td>
-                <td>3</td>
-                <td>9</td>
-                <td>Dr. Ravi Menon</td>
-                <td><button class="btn btn-danger btn-sm">Delete</button></td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td>Entrepreneurship</td>
-                <td>MBA</td>
-                <td>2</td>
-                <td>25</td>
-                <td>Prof. Latha S.</td>
-                <td><button class="btn btn-danger btn-sm">Delete</button></td>
-              </tr>
+              <tr><td colspan="7" style="text-align:center;padding:20px">Loading...</td></tr>
             </tbody>
           </table>
         </div>
@@ -213,26 +92,86 @@
     </main>
   </div>
 
-  <div class="toast" id="toast">
-    <span class="toast-icon" id="toast-icon">✅</span>
-    <span id="toast-msg">Done!</span>
-  </div>
+  <div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✅</span><span id="toast-msg">Done!</span></div>
 
+  <script src="../auth.js"></script>
   <script src="../script.js"></script>
   <script>
-    function showAddForm() {
-      document.getElementById('add-form').style.display = 'block';
+    (async () => {
+      const session = await requireAuth('admin', '../login.html');
+      if (!session) return;
+      const initials = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('avatarInitials').textContent = initials;
+      document.getElementById('sidebarName').textContent    = session.name;
+      document.getElementById('sidebarMeta').textContent    = (session.designation || 'Admin') + ' — ' + (session.department || '');
+      loadElectives();
+    })();
+
+    async function loadElectives() {
+      const res    = await fetch('/api/auth/admin/electives', { credentials: 'include' });
+      const result = await res.json();
+      if (!result.ok) { showToast('❌', result.msg); return; }
+      renderElectives(result.electives);
     }
-    function hideAddForm() {
-      document.getElementById('add-form').style.display = 'none';
+
+    function renderElectives(electives) {
+      document.getElementById('elective-count').textContent = electives.length + ' electives';
+      const tbody = document.getElementById('electiveTableBody');
+      if (electives.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px">No electives found</td></tr>';
+        return;
+      }
+      tbody.innerHTML = electives.map(e => `
+        <tr>
+          <td>${e.id}</td>
+          <td>${e.name}</td>
+          <td>${e.department || '—'}</td>
+          <td>${e.credits || '—'}</td>
+          <td>${e.seats || '—'}</td>
+          <td>${e.faculty || '—'}</td>
+          <td><button class="btn btn-danger btn-sm" onclick="deleteElective(${e.id})">Delete</button></td>
+        </tr>
+      `).join('');
     }
-    function addElective() {
-      var name = document.getElementById('electiveName').value.trim();
+
+    async function addElective() {
+      const name    = document.getElementById('electiveName').value.trim();
+      const dept    = document.getElementById('electiveDept').value.trim();
+      const seats   = document.getElementById('electiveSeats').value;
+      const credits = document.getElementById('electiveCredits').value;
+      const faculty = document.getElementById('electiveFaculty').value.trim();
+
       if (!name) { showToast('⚠️', 'Please enter elective name'); return; }
-      showToast('✅', 'Elective added successfully!');
+
+      const res    = await fetch('/api/auth/admin/electives', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ name, department: dept, seats, credits, faculty })
+      });
+      const result = await res.json();
+      if (!result.ok) { showToast('❌', result.msg); return; }
+      showToast('✅', 'Elective added!');
       hideAddForm();
+      loadElectives();
+    }
+
+    async function deleteElective(id) {
+      if (!confirm('Delete this elective?')) return;
+      const res    = await fetch('/api/auth/admin/electives/' + id, { method: 'DELETE', credentials: 'include' });
+      const result = await res.json();
+      if (!result.ok) { showToast('❌', result.msg); return; }
+      showToast('✅', 'Elective deleted!');
+      loadElectives();
+    }
+
+    function showAddForm() { document.getElementById('add-form').style.display = 'block'; }
+    function hideAddForm() { document.getElementById('add-form').style.display = 'none'; }
+
+    async function handleLogout() {
+      await logoutUser();
+      window.location.href = '../login.html';
     }
   </script>
 </body>
-
 </html>

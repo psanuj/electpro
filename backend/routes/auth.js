@@ -148,3 +148,163 @@ router.get('/get-preferences', async (req, res) => {
     return res.json({ ok: false, msg: 'Server error.' });
   }
 });
+
+// ─── ADMIN: GET ALL STUDENTS ──────────────────────────────────────────────────
+router.get('/admin/students', async (req, res) => {
+  try {
+    if (!req.session.user || req.session.user.role !== 'admin') {
+      return res.json({ ok: false, msg: 'Unauthorized.' });
+    }
+    const result = await pool.query(
+      `SELECT id, name, email, usn, branch, semester, cgpa, preferences FROM users WHERE role='student' ORDER BY name`
+    );
+    return res.json({ ok: true, students: result.rows });
+  } catch (err) {
+    console.error('Get students error:', err.message);
+    return res.json({ ok: false, msg: 'Server error.' });
+  }
+});
+
+// ─── ADMIN: GET ALL ELECTIVES ─────────────────────────────────────────────────
+router.get('/admin/electives', async (req, res) => {
+  try {
+    const result = await pool.query(`SELECT * FROM electives ORDER BY id`);
+    return res.json({ ok: true, electives: result.rows });
+  } catch (err) {
+    console.error('Get electives error:', err.message);
+    return res.json({ ok: false, msg: 'Server error.' });
+  }
+});
+
+// ─── ADMIN: ADD ELECTIVE ──────────────────────────────────────────────────────
+router.post('/admin/electives', async (req, res) => {
+  try {
+    if (!req.session.user || req.session.user.role !== 'admin') {
+      return res.json({ ok: false, msg: 'Unauthorized.' });
+    }
+    const { name, department, seats, credits, faculty } = req.body;
+    if (!name) return res.json({ ok: false, msg: 'Elective name required.' });
+    await pool.query(
+      `INSERT INTO electives (name, department, seats, credits, faculty) VALUES ($1,$2,$3,$4,$5)`,
+      [name, department||'', seats||30, credits||3, faculty||'']
+    );
+    return res.json({ ok: true, msg: 'Elective added!' });
+  } catch (err) {
+    console.error('Add elective error:', err.message);
+    return res.json({ ok: false, msg: 'Server error.' });
+  }
+});
+
+// ─── ADMIN: DELETE ELECTIVE ───────────────────────────────────────────────────
+router.delete('/admin/electives/:id', async (req, res) => {
+  try {
+    if (!req.session.user || req.session.user.role !== 'admin') {
+      return res.json({ ok: false, msg: 'Unauthorized.' });
+    }
+    await pool.query(`DELETE FROM electives WHERE id=$1`, [req.params.id]);
+    return res.json({ ok: true, msg: 'Elective deleted!' });
+  } catch (err) {
+    console.error('Delete elective error:', err.message);
+    return res.json({ ok: false, msg: 'Server error.' });
+  }
+});
+
+// ─── ADMIN: RUN ALLOCATION ────────────────────────────────────────────────────
+router.post('/admin/run-allocation', async (req, res) => {
+  try {
+    if (!req.session.user || req.session.user.role !== 'admin') {
+      return res.json({ ok: false, msg: 'Unauthorized.' });
+    }
+
+    // Get all students with preferences sorted by CGPA desc
+    const studentsResult = await pool.query(
+      `SELECT id, name, usn, cgpa, preferences FROM users WHERE role='student' AND preferences IS NOT NULL ORDER BY CAST(NULLIF(cgpa,'') AS FLOAT) DESC NULLS LAST`
+    );
+    const students = studentsResult.rows;
+
+    // Get all electives
+    const electivesResult = await pool.query(`SELECT * FROM electives`);
+    const electives = electivesResult.rows;
+
+    // Track available seats
+    const seatMap = {};
+    electives.forEach(e => { seatMap[e.id] = parseInt(e.seats); });
+
+    // Clear previous allocations
+    await pool.query(`DELETE FROM allocations`);
+
+    const results = [];
+
+    // Allocate based on CGPA priority
+    for (const student of students) {
+      let prefs = [];
+      try { prefs = JSON.parse(student.preferences || '[]'); } catch(e) {}
+
+      let allocated = false;
+      let prefNum = 0;
+
+      for (const electiveId of prefs) {
+        prefNum++;
+        const elective = electives.find(e => e.id == electiveId);
+        if (!elective) continue;
+
+        if (seatMap[electiveId] > 0) {
+          seatMap[electiveId]--;
+          await pool.query(
+            `INSERT INTO allocations (student_id, elective_id, preference_num, status) VALUES ($1,$2,$3,'Allocated')`,
+            [student.id, electiveId, prefNum]
+          );
+          results.push({ student, elective, prefNum, status: 'Allocated' });
+          allocated = true;
+          break;
+        }
+      }
+
+      if (!allocated && prefs.length > 0) {
+        const firstElective = electives.find(e => e.id == prefs[0]);
+        await pool.query(
+          `INSERT INTO allocations (student_id, elective_id, preference_num, status) VALUES ($1,$2,$3,'Waitlisted')`,
+          [student.id, prefs[0] || null, 1, 'Waitlisted']
+        );
+        results.push({ student, elective: firstElective, prefNum: 1, status: 'Waitlisted' });
+      }
+    }
+
+    return res.json({ ok: true, msg: 'Allocation completed!', results });
+  } catch (err) {
+    console.error('Allocation error:', err.message);
+    return res.json({ ok: false, msg: 'Server error: ' + err.message });
+  }
+});
+
+// ─── ADMIN: GET ALLOCATION RESULTS ────────────────────────────────────────────
+router.get('/admin/allocations', async (req, res) => {
+  try {
+    if (!req.session.user || req.session.user.role !== 'admin') {
+      return res.json({ ok: false, msg: 'Unauthorized.' });
+    }
+    const result = await pool.query(`
+      SELECT a.id, a.preference_num, a.status,
+             u.name as student_name, u.usn, u.cgpa,
+             e.name as elective_name
+      FROM allocations a
+      JOIN users u ON a.student_id = u.id
+      JOIN electives e ON a.elective_id = e.id
+      ORDER BY CAST(NULLIF(u.cgpa,'') AS FLOAT) DESC NULLS LAST
+    `);
+    return res.json({ ok: true, allocations: result.rows });
+  } catch (err) {
+    console.error('Get allocations error:', err.message);
+    return res.json({ ok: false, msg: 'Server error.' });
+  }
+});
+
+// ─── STUDENT: GET ELECTIVES ───────────────────────────────────────────────────
+router.get('/electives', async (req, res) => {
+  try {
+    const result = await pool.query(`SELECT * FROM electives ORDER BY id`);
+    return res.json({ ok: true, electives: result.rows });
+  } catch (err) {
+    return res.json({ ok: false, msg: 'Server error.' });
+  }
+});
