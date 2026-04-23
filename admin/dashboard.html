@@ -133,34 +133,14 @@
     <span id="toast-msg">Done!</span>
   </div>
 
-
   <script src="../auth.js"></script>
   <script src="../script.js"></script>
   <script>
-    // Protect page - must be logged in as admin
-    const session = requireAuth('admin', '../login.html');
-    if (session) {
-      const firstName = session.name.split(' ')[0];
-      const initials  = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-
-      const greet = document.getElementById('greetName');
-      if (greet) greet.textContent = firstName;
-
-      const sidebarName = document.getElementById('sidebarName');
-      const sidebarMeta = document.getElementById('sidebarMeta');
-      if (sidebarName) sidebarName.textContent = session.name;
-      if (sidebarMeta) sidebarMeta.textContent = (session.designation || 'Admin') + ' — ' + (session.department || '');
-
-      const avatar = document.getElementById('avatarInitials');
-      if (avatar) avatar.textContent = initials;
-    }
-
     async function handleLogout() {
-      logoutUser();
+      await logoutUser();
       window.location.href = '../login.html';
     }
 
-    // ── Fetch & display dashboard stats ──────────────────────────────────────
     async function loadStats() {
       try {
         const res = await fetch('/api/auth/stats', { credentials: 'include' });
@@ -177,30 +157,47 @@
       }
     }
 
-    // ── Dynamic allocation window progress (deadline: May 12 2026) ───────────
     function updateAllocationWindow() {
-      const start    = new Date('2026-04-01T00:00:00');   // window start
-      const deadline = new Date('2026-05-12T23:59:00');   // final deadline
+      const start    = new Date('2026-04-01T00:00:00');
+      const deadline = new Date('2026-05-12T23:59:00');
       const now      = new Date();
-
       const total    = deadline - start;
       const elapsed  = Math.max(0, now - start);
       const pct      = Math.min(100, Math.round((elapsed / total) * 100));
-
       const msLeft   = deadline - now;
       const daysLeft = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
-
-      const bar  = document.getElementById('alloc-progress');
+      const bar    = document.getElementById('alloc-progress');
       const pctEl  = document.getElementById('alloc-pct');
       const daysEl = document.getElementById('alloc-days');
-
       if (bar)    bar.style.width = pct + '%';
       if (pctEl)  pctEl.textContent = pct + '% of window used';
       if (daysEl) daysEl.textContent = daysLeft > 0 ? daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + ' remaining' : 'Deadline passed';
     }
 
-    loadStats();
-    updateAllocationWindow();
+    (async () => {
+      const session = await requireAuth('admin', '../login.html');
+      if (!session) return;
+
+      // safely handle missing name
+      const name      = session.name || 'Admin';
+      const parts     = name.trim().split(' ');
+      const firstName = parts[0] || 'Admin';
+      const initials  = parts.map(n => n[0] || '').join('').toUpperCase().slice(0, 2) || 'AD';
+
+      const greet = document.getElementById('greetName');
+      if (greet) greet.textContent = firstName;
+
+      const sidebarName = document.getElementById('sidebarName');
+      const sidebarMeta = document.getElementById('sidebarMeta');
+      if (sidebarName) sidebarName.textContent = name;
+      if (sidebarMeta) sidebarMeta.textContent = (session.designation || 'Admin') + ' — ' + (session.department || '');
+
+      const avatar = document.getElementById('avatarInitials');
+      if (avatar) avatar.textContent = initials;
+
+      await loadStats();
+      updateAllocationWindow();
+    })();
   </script>
 </body>
 </html>
