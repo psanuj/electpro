@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Allocation Results — ElectPro Admin</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
-
 <body>
 
   <aside class="sidebar" id="sidebar">
@@ -16,26 +14,14 @@
       <div class="brand-name">ElectPro</div>
       <div class="brand-sub">Admin Portal</div>
     </div>
-
     <nav class="sidebar-nav">
       <div class="nav-section-label">Menu</div>
-      <a href="dashboard.html" class="nav-link">
-        <span class="icon">🏠</span> Dashboard
-      </a>
-      <a href="manage_electives.html" class="nav-link">
-        <span class="icon">📚</span> Manage Electives
-      </a>
-      <a href="view_students.html" class="nav-link">
-        <span class="icon">👥</span> View Students
-      </a>
-      <a href="view_preferences.html" class="nav-link">
-        <span class="icon">📋</span> Preferences
-      </a>
-      <a href="allocation_results.html" class="nav-link active">
-        <span class="icon">🎯</span> Allocation Results
-      </a>
+      <a href="dashboard.html" class="nav-link"><span class="icon">🏠</span> Dashboard</a>
+      <a href="manage_electives.html" class="nav-link"><span class="icon">📚</span> Manage Electives</a>
+      <a href="view_students.html" class="nav-link"><span class="icon">👥</span> View Students</a>
+      <a href="view_preferences.html" class="nav-link"><span class="icon">📋</span> Preferences</a>
+      <a href="allocation_results.html" class="nav-link active"><span class="icon">🎯</span> Allocation Results</a>
     </nav>
-
     <div class="sidebar-footer">
       <div class="user-chip">
         <div class="avatar" id="avatarInitials">??</div>
@@ -50,14 +36,14 @@
   <div class="main">
     <header class="topbar">
       <div class="flex gap-3" style="align-items:center">
-        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
-          <span></span><span></span><span></span>
-        </div>
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></div>
         <h1 class="page-title">Allocation Results</h1>
       </div>
       <div class="topbar-right">
         <button class="btn btn-primary btn-sm" onclick="runAllocation()">🎯 Run Allocation</button>
+        <button class="btn btn-outline btn-sm" id="publish-btn" onclick="publishResults()" style="display:none">📢 Publish Results</button>
         <span class="badge-pill badge-amber" id="alloc-status">Not Run</span>
+        <button class="btn btn-danger btn-sm" onclick="handleLogout()">🚪 Logout</button>
       </div>
     </header>
 
@@ -68,9 +54,7 @@
           <span style="font-size:20px">⚠️</span>
           <div>
             <div style="font-weight:600;margin-bottom:4px">Allocation Engine</div>
-            <div class="text-sm text-secondary">Click "Run Allocation" to process student preferences and assign
-              electives based on CGPA ranking and seat availability. This action will overwrite any previous results.
-            </div>
+            <div class="text-sm text-secondary">Click "Run Allocation" to process student preferences and assign electives based on CGPA ranking and seat availability.</div>
           </div>
         </div>
       </div>
@@ -78,18 +62,18 @@
       <div class="stats-grid fade-up fade-up-2">
         <div class="stat-card blue">
           <div class="stat-icon">👥</div>
-          <div class="stat-value">85</div>
+          <div class="stat-value" id="total-processed">—</div>
           <div class="stat-label">Students Processed</div>
         </div>
         <div class="stat-card green">
           <div class="stat-icon">✅</div>
-          <div class="stat-value">72</div>
+          <div class="stat-value" id="total-allocated">—</div>
           <div class="stat-label">Successfully Allocated</div>
         </div>
         <div class="stat-card amber">
           <div class="stat-icon">⏳</div>
-          <div class="stat-value">13</div>
-          <div class="stat-label">Pending / Unallocated</div>
+          <div class="stat-value" id="total-waitlisted">—</div>
+          <div class="stat-label">Waitlisted</div>
         </div>
       </div>
 
@@ -111,70 +95,7 @@
               </tr>
             </thead>
             <tbody id="resultsTableBody">
-              <tr>
-                <td>NNM25CS502</td>
-                <td>Priya Patel</td>
-                <td>9.1</td>
-                <td><span class="badge-pill badge-blue">#1</span></td>
-                <td>Machine Learning</td>
-                <td><span class="badge-pill badge-green">Allocated</span></td>
-              </tr>
-              <tr>
-                <td>NNM25CS504</td>
-                <td>Sneha Reddy</td>
-                <td>8.9</td>
-                <td><span class="badge-pill badge-blue">#1</span></td>
-                <td>Deep Learning</td>
-                <td><span class="badge-pill badge-green">Allocated</span></td>
-              </tr>
-              <tr>
-                <td>NNM25CS501</td>
-                <td>Rahul Sharma</td>
-                <td>8.5</td>
-                <td><span class="badge-pill badge-blue">#1</span></td>
-                <td>Cloud Computing</td>
-                <td><span class="badge-pill badge-green">Allocated</span></td>
-              </tr>
-              <tr>
-                <td>NNM25EC507</td>
-                <td>Deepa Nair</td>
-                <td>8.2</td>
-                <td><span class="badge-pill badge-blue">#2</span></td>
-                <td>IoT Systems</td>
-                <td><span class="badge-pill badge-green">Allocated</span></td>
-              </tr>
-              <tr>
-                <td>NNM25EC503</td>
-                <td>Amit Kumar</td>
-                <td>7.8</td>
-                <td><span class="badge-pill badge-amber">#2</span></td>
-                <td>Signal Processing</td>
-                <td><span class="badge-pill badge-green">Allocated</span></td>
-              </tr>
-              <tr>
-                <td>NNM25ME506</td>
-                <td>Vikram Singh</td>
-                <td>7.5</td>
-                <td><span class="badge-pill badge-blue">#1</span></td>
-                <td>Robotics</td>
-                <td><span class="badge-pill badge-green">Allocated</span></td>
-              </tr>
-              <tr>
-                <td>NNM25CS505</td>
-                <td>Anuj Acharya</td>
-                <td>7.1</td>
-                <td><span class="badge-pill badge-blue">#1</span></td>
-                <td>Machine Learning</td>
-                <td><span class="badge-pill badge-green">Allocated</span></td>
-              </tr>
-              <tr>
-                <td>NNM25CS508</td>
-                <td>Karthik Menon</td>
-                <td>6.9</td>
-                <td><span class="badge-pill badge-amber">#3</span></td>
-                <td>Blockchain Tech</td>
-                <td><span class="badge-pill badge-amber">Waitlisted</span></td>
-              </tr>
+              <tr><td colspan="6" style="text-align:center;padding:20px">Run allocation to see results</td></tr>
             </tbody>
           </table>
         </div>
@@ -183,40 +104,99 @@
     </main>
   </div>
 
-  <div class="toast" id="toast">
-    <span class="toast-icon" id="toast-icon">✅</span>
-    <span id="toast-msg">Done!</span>
-  </div>
+  <div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✅</span><span id="toast-msg">Done!</span></div>
 
   <script src="../auth.js"></script>
   <script src="../script.js"></script>
   <script>
     (async () => {
       const session = await requireAuth('admin', '../login.html');
-      if (session) {
-        const initials = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-        const el = id => document.getElementById(id);
-        if (el('avatarInitials')) el('avatarInitials').textContent = initials;
-        if (el('sidebarName'))    el('sidebarName').textContent    = session.name;
-        if (el('sidebarMeta'))    el('sidebarMeta').textContent    = (session.designation || 'Admin') + ' — ' + (session.department || '');
-      }
+      if (!session) return;
+      const initials = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('avatarInitials').textContent = initials;
+      document.getElementById('sidebarName').textContent    = session.name;
+      document.getElementById('sidebarMeta').textContent    = (session.designation || 'Admin') + ' — ' + (session.department || '');
+      loadAllocations();
     })();
+
+    async function loadAllocations() {
+      const res    = await fetch('/api/auth/admin/allocations', { credentials: 'include' });
+      const result = await res.json();
+      if (!result.ok) return;
+      if (result.allocations.length > 0) {
+        renderResults(result.allocations);
+        document.getElementById('publish-btn').style.display = 'inline-block';
+        if (result.published) {
+          document.getElementById('alloc-status').textContent = 'Published';
+          document.getElementById('alloc-status').className   = 'badge-pill badge-green';
+          document.getElementById('publish-btn').textContent  = '✅ Results Published';
+          document.getElementById('publish-btn').disabled     = true;
+        } else {
+          document.getElementById('alloc-status').textContent = 'Completed';
+          document.getElementById('alloc-status').className   = 'badge-pill badge-blue';
+        }
+      }
+    }
+
+    async function runAllocation() {
+      document.getElementById('alloc-status').textContent  = 'Running...';
+      document.getElementById('alloc-status').className    = 'badge-pill badge-blue';
+      document.getElementById('publish-btn').style.display = 'none';
+      showToast('⏳', 'Running allocation...');
+
+      const res    = await fetch('/api/auth/admin/run-allocation', { method: 'POST', credentials: 'include' });
+      const result = await res.json();
+
+      if (!result.ok) {
+        showToast('❌', result.msg);
+        document.getElementById('alloc-status').textContent = 'Failed';
+        document.getElementById('alloc-status').className   = 'badge-pill badge-red';
+        return;
+      }
+
+      document.getElementById('alloc-status').textContent = 'Completed';
+      document.getElementById('alloc-status').className   = 'badge-pill badge-blue';
+      showToast('✅', 'Allocation completed! Click "Publish Results" to make visible to students.');
+      loadAllocations();
+    }
+
+    async function publishResults() {
+      const res    = await fetch('/api/auth/admin/publish-results', { method: 'POST', credentials: 'include' });
+      const result = await res.json();
+      if (!result.ok) { showToast('❌', result.msg); return; }
+      showToast('✅', 'Results published! Students can now see their allocation.');
+      document.getElementById('alloc-status').textContent = 'Published';
+      document.getElementById('alloc-status').className   = 'badge-pill badge-green';
+      document.getElementById('publish-btn').textContent  = '✅ Results Published';
+      document.getElementById('publish-btn').disabled     = true;
+    }
+
+    function renderResults(allocations) {
+      const allocated   = allocations.filter(a => a.status === 'Allocated');
+      const waitlisted  = allocations.filter(a => a.status === 'Waitlisted');
+
+      document.getElementById('total-processed').textContent  = allocations.length;
+      document.getElementById('total-allocated').textContent  = allocated.length;
+      document.getElementById('total-waitlisted').textContent = waitlisted.length;
+
+      document.getElementById('resultsTableBody').innerHTML = allocations.map(a => `
+        <tr>
+          <td>${a.usn || '—'}</td>
+          <td>${a.student_name}</td>
+          <td>${a.cgpa || '—'}</td>
+          <td><span class="badge-pill badge-blue">#${a.preference_num}</span></td>
+          <td>${a.elective_name}</td>
+          <td>${a.status === 'Allocated'
+            ? '<span class="badge-pill badge-green">Allocated</span>'
+            : '<span class="badge-pill badge-amber">Waitlisted</span>'}</td>
+        </tr>
+      `).join('');
+    }
+
     async function handleLogout() {
       await logoutUser();
       window.location.href = '../login.html';
     }
   </script>
-  <script>
-    function runAllocation() {
-      document.getElementById('alloc-status').textContent = 'Running...';
-      document.getElementById('alloc-status').className = 'badge-pill badge-blue';
-      setTimeout(function () {
-        document.getElementById('alloc-status').textContent = 'Completed';
-        document.getElementById('alloc-status').className = 'badge-pill badge-green';
-        showToast('✅', 'Allocation completed successfully!');
-      }, 1500);
-    }
-  </script>
 </body>
-
 </html>

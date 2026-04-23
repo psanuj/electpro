@@ -162,16 +162,31 @@
     }
   </script>
   <script>
-    const ALL_ELECTIVES = {
-      1: { name: 'Machine Learning', dept: 'CSE', credits: 3, seats: 8, faculty: 'Dr. Meena Rao' },
-      2: { name: 'Cloud Computing', dept: 'CSE', credits: 3, seats: 12, faculty: 'Prof. Anand S.' },
-      3: { name: 'IoT Systems', dept: 'ECE', credits: 2, seats: 3, faculty: 'Dr. Priya Nair' },
-      4: { name: 'Cyber Security', dept: 'CSE', credits: 3, seats: 15, faculty: 'Prof. Raj Kumar' },
-      5: { name: 'Robotics', dept: 'MECH', credits: 4, seats: 6, faculty: 'Dr. Suresh T.' },
-      6: { name: 'Deep Learning', dept: 'CSE', credits: 3, seats: 10, faculty: 'Dr. Aisha Khan' },
-    };
+    let ALL_ELECTIVES = {};
+    let prefOrder = [];
 
-    let prefOrder = [1, 2, 3]; // will be loaded from server
+    // Load from backend on page load
+    (async () => {
+      const [electRes, prefRes] = await Promise.all([
+        fetch('/api/auth/electives', { credentials: 'include' }).then(r => r.json()),
+        fetch('/api/auth/get-preferences', { credentials: 'include' }).then(r => r.json())
+      ]);
+      if (electRes.ok) {
+        ALL_ELECTIVES = {};
+        electRes.electives.forEach(e => {
+          ALL_ELECTIVES[e.id] = { name: e.name, dept: e.department || 'N/A', credits: e.credits, seats: e.seats, faculty: e.faculty || 'TBA' };
+        });
+      }
+      if (prefRes.ok && prefRes.preferences && prefRes.preferences.length > 0) {
+        prefOrder = prefRes.preferences.map(Number).filter(id => ALL_ELECTIVES[id]);
+      }
+      if (prefOrder.length === 0) {
+        document.getElementById('pref-list').innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">No preferences saved yet. <a href=\'select_electives.html\'>Select electives →</a></div>';
+        document.getElementById('pref-table-body').innerHTML = '<tr><td colspan=\'7\' style=\'text-align:center;padding:20px\'>No preferences saved</td></tr>';
+      } else {
+        renderPrefList();
+      }
+    })();
 
     function chanceLabel(seats) {
       if (seats >= 12) return '<span class="badge-pill badge-green">High</span>';
@@ -229,14 +244,16 @@
       renderPrefList();
     }
 
-    function saveOrder() {
-      // Save to backend
-      fetch('/api/auth/save-preferences', {
+    async function saveOrder() {
+      showToast('⏳', 'Saving order...');
+      const res = await fetch('/api/auth/save-preferences', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ preferences: prefOrder })
       });
+      const result = await res.json();
+      if (!result.ok) { showToast('❌', result.msg); return; }
       showToast('✅', 'Priority order updated!');
     }
 
@@ -261,7 +278,6 @@
       });
     }
 
-    renderPrefList();
   </script>
 </body>
 

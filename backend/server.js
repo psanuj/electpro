@@ -1,8 +1,8 @@
 const express = require('express');
 const session = require('express-session');
-const cors    = require('cors');
-const path    = require('path');
-const pool    = require('./db');
+const cors = require('cors');
+const path = require('path');
+const pool = require('./db');
 
 const app = express();
 
@@ -44,6 +44,59 @@ async function initDB() {
     await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS cgpa VARCHAR(10)`);
     await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS advisor VARCHAR(100)`);
     await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS preferences TEXT`);
+
+    // Settings table for publish/unpublish
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS settings (
+        key   VARCHAR(100) PRIMARY KEY,
+        value TEXT
+      )
+    `);
+    // Ensure results_published key exists
+    await pool.query(`INSERT INTO settings (key,value) VALUES ('results_published','false') ON CONFLICT (key) DO NOTHING`);
+
+    // Create electives table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS electives (
+        id         SERIAL PRIMARY KEY,
+        name       VARCHAR(100) NOT NULL,
+        department VARCHAR(50),
+        seats      INTEGER DEFAULT 30,
+        credits    INTEGER DEFAULT 3,
+        faculty    VARCHAR(100),
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+
+    // Create allocations table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS allocations (
+        id             SERIAL PRIMARY KEY,
+        student_id     INTEGER REFERENCES users(id),
+        elective_id    INTEGER REFERENCES electives(id),
+        preference_num INTEGER,
+        status         VARCHAR(20) DEFAULT 'Allocated',
+        created_at     TIMESTAMP DEFAULT NOW()
+      )
+    `);
+
+    // Insert default electives if none exist
+    const electCount = await pool.query('SELECT COUNT(*) FROM electives');
+    if (parseInt(electCount.rows[0].count) === 0) {
+      await pool.query(`
+        INSERT INTO electives (name, department, seats, credits, faculty) VALUES
+        ('Machine Learning', 'CSE', 30, 3, 'Dr. Meena Rao'),
+        ('Cloud Computing', 'CSE', 30, 3, 'Prof. Anand S.'),
+        ('IoT Systems', 'ECE', 30, 2, 'Dr. Priya Nair'),
+        ('Cyber Security', 'CSE', 30, 3, 'Prof. Raj Kumar'),
+        ('Robotics', 'MECH', 30, 4, 'Dr. Suresh T.'),
+        ('Deep Learning', 'CSE', 30, 3, 'Dr. Aisha Khan'),
+        ('Blockchain Tech', 'CSE', 30, 2, 'Prof. Vinod M.'),
+        ('Signal Processing', 'ECE', 30, 3, 'Dr. Ravi Menon'),
+        ('Entrepreneurship', 'MBA', 30, 2, 'Prof. Latha S.')
+      `);
+      console.log('✅ Default electives inserted!');
+    }
     console.log('✅ Database tables ready!');
   } catch (err) {
     console.error('❌ Table creation failed:', err.message);
