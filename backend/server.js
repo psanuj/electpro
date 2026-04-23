@@ -10,11 +10,20 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.set("trust proxy", 1);
+
+const isProduction = process.env.NODE_ENV === "production" || !!process.env.RAILWAY_ENVIRONMENT;
+
 app.use(session({
   secret: 'electpro_secret_key_2024',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 }
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    httpOnly: true
+  }
 }));
 
 async function initDB() {
