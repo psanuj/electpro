@@ -131,29 +131,21 @@
     }
   </script>
   <script>
-    let ELECTIVES = [];
+    const ELECTIVES = [
+      { id: 1, name: 'Machine Learning', dept: 'CSE', credits: 3, seats: 8, faculty: 'Dr. Meena Rao', tag: 'AI & Data' },
+      { id: 2, name: 'Cloud Computing', dept: 'CSE', credits: 3, seats: 12, faculty: 'Prof. Anand S.', tag: 'Infrastructure' },
+      { id: 3, name: 'IoT Systems', dept: 'ECE', credits: 2, seats: 3, faculty: 'Dr. Priya Nair', tag: 'Embedded' },
+      { id: 4, name: 'Cyber Security', dept: 'CSE', credits: 3, seats: 15, faculty: 'Prof. Raj Kumar', tag: 'Security' },
+      { id: 5, name: 'Robotics', dept: 'MECH', credits: 4, seats: 6, faculty: 'Dr. Suresh T.', tag: 'Automation' },
+      { id: 6, name: 'Deep Learning', dept: 'CSE', credits: 3, seats: 10, faculty: 'Dr. Aisha Khan', tag: 'AI & Data' },
+      { id: 7, name: 'Blockchain Tech', dept: 'CSE', credits: 2, seats: 20, faculty: 'Prof. Vinod M.', tag: 'Web3' },
+      { id: 8, name: 'Signal Processing', dept: 'ECE', credits: 3, seats: 9, faculty: 'Dr. Ravi Menon', tag: 'DSP' },
+      { id: 9, name: 'Entrepreneurship', dept: 'MBA', credits: 2, seats: 25, faculty: 'Prof. Latha S.', tag: 'Business' },
+    ];
+
     let selected = [];
 
-    // Load electives from DB and saved preferences
-    (async () => {
-      const [electRes, prefRes] = await Promise.all([
-        fetch('/api/auth/electives', { credentials: 'include' }).then(r => r.json()),
-        fetch('/api/auth/get-preferences', { credentials: 'include' }).then(r => r.json())
-      ]);
-      ELECTIVES = (electRes.ok ? electRes.electives : []).map(e => ({
-        id: e.id, name: e.name, dept: e.department || 'N/A',
-        credits: e.credits, seats: e.seats, faculty: e.faculty || 'TBA',
-        tag: e.department || 'General'
-      }));
-      // Load previously saved preferences
-      if (prefRes.ok && prefRes.preferences && prefRes.preferences.length > 0) {
-        selected = prefRes.preferences.map(Number).filter(id => ELECTIVES.find(e => e.id === id));
-      }
-      renderElectives();
-    })();
-
-    function renderElectives(list) {
-      if (!list) list = ELECTIVES;
+    function renderElectives(list = ELECTIVES) {
       const grid = document.getElementById('elective-grid');
       const empty = document.getElementById('empty-state');
       grid.innerHTML = '';
@@ -196,7 +188,7 @@
 
     function updateCounter() {
       document.getElementById('selected-count').textContent = `${selected.length} / 3 Selected`;
-      const names = selected.map(id => { const e = ELECTIVES.find(x => x.id === id); return e ? e.name : ''; }).filter(Boolean).join(', ');
+      const names = selected.map(id => ELECTIVES.find(e => e.id === id)?.name).join(', ');
       document.getElementById('sel-names').textContent = names || 'None';
     }
 
@@ -214,20 +206,20 @@
 
     function clearAll() { selected = []; filterElectives(); }
 
-    async function savePreferences() {
+    function savePreferences() {
       if (!selected.length) { showToast('⚠️', 'Select at least one elective'); return; }
-      showToast('⏳', 'Saving preferences...');
-      const res = await fetch('/api/auth/save-preferences', {
+      // Save to backend
+      fetch('/api/auth/save-preferences', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ preferences: selected })
       });
-      const result = await res.json();
-      if (!result.ok) { showToast('❌', result.msg); return; }
       showToast('✅', 'Preferences saved successfully!');
       setTimeout(() => window.location.href = 'preferences.html', 1200);
     }
+
+    renderElectives();
   </script>
 </body>
 

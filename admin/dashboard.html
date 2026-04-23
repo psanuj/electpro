@@ -73,22 +73,22 @@
       <div class="stats-grid fade-up fade-up-2">
         <div class="stat-card blue">
           <div class="stat-icon">👥</div>
-          <div class="stat-value" id="stat-students">—</div>
+          <div class="stat-value">120</div>
           <div class="stat-label">Total Students</div>
         </div>
         <div class="stat-card green">
           <div class="stat-icon">📚</div>
-          <div class="stat-value" id="stat-electives">—</div>
+          <div class="stat-value">9</div>
           <div class="stat-label">Total Electives</div>
         </div>
         <div class="stat-card amber">
           <div class="stat-icon">📋</div>
-          <div class="stat-value" id="stat-prefs">—</div>
+          <div class="stat-value">85</div>
           <div class="stat-label">Preferences Submitted</div>
         </div>
         <div class="stat-card purple">
           <div class="stat-icon">🎯</div>
-          <div class="stat-value" id="stat-alloc">—</div>
+          <div class="stat-value">Not Run</div>
           <div class="stat-label">Allocation Status</div>
         </div>
       </div>
@@ -100,16 +100,16 @@
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
             <div style="font-size:40px">📅</div>
             <div>
-              <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800">May 12, 2026</div>
+              <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800">March 23, 2026</div>
               <div class="text-sm text-muted">11:59 PM — Final deadline</div>
             </div>
           </div>
           <div class="progress-track" style="margin-bottom:8px">
-            <div class="progress-fill amber" id="alloc-progress" style="width:0%"></div>
+            <div class="progress-fill amber" style="width:65%"></div>
           </div>
           <div class="flex-between text-sm text-muted">
-            <span id="alloc-pct">Calculating...</span>
-            <span id="alloc-days"></span>
+            <span>65% of window used</span>
+            <span>5 days remaining</span>
           </div>
         </div>
 
@@ -137,51 +137,9 @@
   <script src="../auth.js"></script>
   <script src="../script.js"></script>
   <script>
-    async function handleLogout() {
-      await logoutUser();
-      window.location.href = '../login.html';
-    }
-
-    // ── Fetch & display dashboard stats ──────────────────────────────────────
-    async function loadStats() {
-      try {
-        const res = await fetch('/api/auth/stats', { credentials: 'include' });
-        const data = await res.json();
-        if (data.ok) {
-          document.getElementById('stat-students').textContent  = data.totalStudents;
-          document.getElementById('stat-electives').textContent = data.totalElectives;
-          document.getElementById('stat-prefs').textContent     = data.submittedPrefs;
-          document.getElementById('stat-alloc').textContent     = data.allocationsRun
-            ? (data.published ? '✅ Published' : '⚙️ Done') : '⏳ Pending';
-        }
-      } catch (e) {
-        console.error('Stats fetch failed:', e);
-      }
-    }
-
-    // ── Dynamic allocation window progress (deadline: May 12 2026) ───────────
-    function updateAllocationWindow() {
-      const start    = new Date('2026-04-01T00:00:00');
-      const deadline = new Date('2026-05-12T23:59:00');
-      const now      = new Date();
-      const total    = deadline - start;
-      const elapsed  = Math.max(0, now - start);
-      const pct      = Math.min(100, Math.round((elapsed / total) * 100));
-      const msLeft   = deadline - now;
-      const daysLeft = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
-      const bar    = document.getElementById('alloc-progress');
-      const pctEl  = document.getElementById('alloc-pct');
-      const daysEl = document.getElementById('alloc-days');
-      if (bar)    bar.style.width = pct + '%';
-      if (pctEl)  pctEl.textContent = pct + '% of window used';
-      if (daysEl) daysEl.textContent = daysLeft > 0 ? daysLeft + ' day' + (daysLeft !== 1 ? 's' : '') + ' remaining' : 'Deadline passed';
-    }
-
-    // ── Init: wait for async session, then populate UI + load stats ──────────
-    (async () => {
-      const session = await requireAuth('admin', '../login.html');
-      if (!session) return;
-
+    // Protect page - must be logged in as admin
+    const session = requireAuth('admin', '../login.html');
+    if (session) {
       const firstName = session.name.split(' ')[0];
       const initials  = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 
@@ -195,11 +153,12 @@
 
       const avatar = document.getElementById('avatarInitials');
       if (avatar) avatar.textContent = initials;
+    }
 
-      // Only load stats after session is confirmed valid
-      await loadStats();
-      updateAllocationWindow();
-    })();
+    async function handleLogout() {
+      logoutUser();
+      window.location.href = '../login.html';
+    }
   </script>
 </body>
 </html>

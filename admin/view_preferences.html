@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Preferences — ElectPro Admin</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
+
 <body>
 
   <aside class="sidebar" id="sidebar">
@@ -14,14 +16,26 @@
       <div class="brand-name">ElectPro</div>
       <div class="brand-sub">Admin Portal</div>
     </div>
+
     <nav class="sidebar-nav">
       <div class="nav-section-label">Menu</div>
-      <a href="dashboard.html" class="nav-link"><span class="icon">🏠</span> Dashboard</a>
-      <a href="manage_electives.html" class="nav-link"><span class="icon">📚</span> Manage Electives</a>
-      <a href="view_students.html" class="nav-link"><span class="icon">👥</span> View Students</a>
-      <a href="view_preferences.html" class="nav-link active"><span class="icon">📋</span> Preferences</a>
-      <a href="allocation_results.html" class="nav-link"><span class="icon">🎯</span> Allocation Results</a>
+      <a href="dashboard.html" class="nav-link">
+        <span class="icon">🏠</span> Dashboard
+      </a>
+      <a href="manage_electives.html" class="nav-link">
+        <span class="icon">📚</span> Manage Electives
+      </a>
+      <a href="view_students.html" class="nav-link">
+        <span class="icon">👥</span> View Students
+      </a>
+      <a href="view_preferences.html" class="nav-link active">
+        <span class="icon">📋</span> Preferences
+      </a>
+      <a href="allocation_results.html" class="nav-link">
+        <span class="icon">🎯</span> Allocation Results
+      </a>
     </nav>
+
     <div class="sidebar-footer">
       <div class="user-chip">
         <div class="avatar" id="avatarInitials">??</div>
@@ -36,20 +50,35 @@
   <div class="main">
     <header class="topbar">
       <div class="flex gap-3" style="align-items:center">
-        <div class="hamburger" id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></div>
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+          <span></span><span></span><span></span>
+        </div>
         <h1 class="page-title">Student Preferences</h1>
       </div>
       <div class="topbar-right">
-        <span class="badge-pill badge-green" id="submitted-count">0 Submitted</span>
-        <span class="badge-pill badge-amber" id="pending-count">0 Pending</span>
-        <button class="btn btn-danger btn-sm" onclick="handleLogout()">🚪 Logout</button>
+        <span class="badge-pill badge-green">85 Submitted</span>
+        <span class="badge-pill badge-amber">35 Pending</span>
       </div>
     </header>
 
     <main class="content">
-      <div class="mb-6 fade-up fade-up-1">
+
+      <div class="card mb-6 fade-up fade-up-1" style="background:var(--accent-soft);border-color:var(--accent-glow)">
+        <div class="flex gap-3" style="align-items:flex-start">
+          <span style="font-size:20px">ℹ️</span>
+          <div>
+            <div style="font-weight:600;margin-bottom:4px">Student Preferences Overview</div>
+            <div class="text-sm text-secondary">This page shows all student preference submissions.
+              Each student selects up to 3 electives in order of priority. Use this data to review
+              before running the allocation algorithm.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-6 fade-up fade-up-2">
         <div class="flex gap-3" style="flex-wrap:wrap;align-items:center">
-          <input type="text" id="search-pref" placeholder="🔍 Search by student name..." style="max-width:280px" oninput="filterPrefs()" />
+          <input type="text" id="search-pref" placeholder="🔍  Search by student name..."
+            style="max-width:280px" oninput="filterPrefs()" />
           <select id="status-filter" onchange="filterPrefs()" style="max-width:180px">
             <option value="">All Status</option>
             <option value="Submitted">Submitted</option>
@@ -58,10 +87,10 @@
         </div>
       </div>
 
-      <div class="fade-up fade-up-2">
+      <div class="fade-up fade-up-3">
         <div class="flex-between mb-4">
           <h3 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700">Preference Submissions</h3>
-          <span class="text-sm text-muted" id="showing-count">Loading...</span>
+          <span class="text-sm text-muted">85 of 120 students submitted</span>
         </div>
         <div class="table-wrap">
           <table>
@@ -77,95 +106,123 @@
               </tr>
             </thead>
             <tbody id="prefTableBody">
-              <tr><td colspan="7" style="text-align:center;padding:20px">Loading...</td></tr>
+              <tr>
+                <td>NNM25CS501</td>
+                <td>Rahul Sharma</td>
+                <td>8.5</td>
+                <td>Cloud Computing</td>
+                <td>Machine Learning</td>
+                <td>Cyber Security</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS502</td>
+                <td>Priya Patel</td>
+                <td>9.1</td>
+                <td>Machine Learning</td>
+                <td>Deep Learning</td>
+                <td>Cloud Computing</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+              <tr>
+                <td>NNM25EC503</td>
+                <td>Amit Kumar</td>
+                <td>7.8</td>
+                <td>IoT Systems</td>
+                <td>Signal Processing</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-amber">Pending</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS504</td>
+                <td>Sneha Reddy</td>
+                <td>8.9</td>
+                <td>Deep Learning</td>
+                <td>Machine Learning</td>
+                <td>Blockchain Tech</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS505</td>
+                <td>Anuj Acharya</td>
+                <td>7.1</td>
+                <td>Machine Learning</td>
+                <td>Cloud Computing</td>
+                <td>IoT Systems</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+              <tr>
+                <td>NNM25ME506</td>
+                <td>Vikram Singh</td>
+                <td>7.5</td>
+                <td>Robotics</td>
+                <td>—</td>
+                <td>—</td>
+                <td><span class="badge-pill badge-amber">Pending</span></td>
+              </tr>
+              <tr>
+                <td>NNM25EC507</td>
+                <td>Deepa Nair</td>
+                <td>8.2</td>
+                <td>Signal Processing</td>
+                <td>IoT Systems</td>
+                <td>Entrepreneurship</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
+              <tr>
+                <td>NNM25CS508</td>
+                <td>Karthik Menon</td>
+                <td>6.9</td>
+                <td>Cyber Security</td>
+                <td>Cloud Computing</td>
+                <td>Blockchain Tech</td>
+                <td><span class="badge-pill badge-green">Submitted</span></td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
+
     </main>
   </div>
 
-  <div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✅</span><span id="toast-msg">Done!</span></div>
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toast-icon">✅</span>
+    <span id="toast-msg">Done!</span>
+  </div>
 
   <script src="../auth.js"></script>
   <script src="../script.js"></script>
   <script>
-    let allStudents = [];
-    let allElectives = [];
-
     (async () => {
       const session = await requireAuth('admin', '../login.html');
-      if (!session) return;
-      const initials = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-      document.getElementById('avatarInitials').textContent = initials;
-      document.getElementById('sidebarName').textContent    = session.name;
-      document.getElementById('sidebarMeta').textContent    = (session.designation || 'Admin') + ' — ' + (session.department || '');
-
-      // Load electives and students together
-      const [studRes, electRes] = await Promise.all([
-        fetch('/api/auth/admin/students', { credentials: 'include' }).then(r => r.json()),
-        fetch('/api/auth/electives', { credentials: 'include' }).then(r => r.json())
-      ]);
-
-      allElectives = electRes.ok ? electRes.electives : [];
-      allStudents  = studRes.ok  ? studRes.students   : [];
-
-      const submitted = allStudents.filter(s => s.preferences && JSON.parse(s.preferences).length > 0);
-      const pending   = allStudents.filter(s => !s.preferences || JSON.parse(s.preferences||'[]').length === 0);
-
-      document.getElementById('submitted-count').textContent = submitted.length + ' Submitted';
-      document.getElementById('pending-count').textContent   = pending.length + ' Pending';
-
-      renderPrefs(allStudents);
-    })();
-
-    function getElectiveName(id) {
-      const e = allElectives.find(e => e.id == id);
-      return e ? e.name : '—';
-    }
-
-    function renderPrefs(students) {
-      const tbody = document.getElementById('prefTableBody');
-      document.getElementById('showing-count').textContent = 'Showing ' + students.length + ' students';
-      if (students.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px">No students found</td></tr>';
-        return;
+      if (session) {
+        const initials = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        const el = id => document.getElementById(id);
+        if (el('avatarInitials')) el('avatarInitials').textContent = initials;
+        if (el('sidebarName'))    el('sidebarName').textContent    = session.name;
+        if (el('sidebarMeta'))    el('sidebarMeta').textContent    = (session.designation || 'Admin') + ' — ' + (session.department || '');
       }
-      tbody.innerHTML = students.map(s => {
-        let prefs = [];
-        try { prefs = JSON.parse(s.preferences || '[]'); } catch(e) {}
-        const submitted = prefs.length > 0;
-        return `<tr>
-          <td>${s.usn || '—'}</td>
-          <td>${s.name}</td>
-          <td>${s.cgpa || '—'}</td>
-          <td>${getElectiveName(prefs[0])}</td>
-          <td>${getElectiveName(prefs[1])}</td>
-          <td>${getElectiveName(prefs[2])}</td>
-          <td>${submitted
-            ? '<span class="badge-pill badge-green">Submitted</span>'
-            : '<span class="badge-pill badge-amber">Pending</span>'}</td>
-        </tr>`;
-      }).join('');
-    }
-
-    function filterPrefs() {
-      const q      = document.getElementById('search-pref').value.toLowerCase();
-      const status = document.getElementById('status-filter').value;
-      const filtered = allStudents.filter(s => {
-        const prefs     = JSON.parse(s.preferences || '[]');
-        const submitted = prefs.length > 0 ? 'Submitted' : 'Pending';
-        const matchSearch = !q || s.name.toLowerCase().includes(q);
-        const matchStatus = !status || submitted === status;
-        return matchSearch && matchStatus;
-      });
-      renderPrefs(filtered);
-    }
-
+    })();
     async function handleLogout() {
       await logoutUser();
       window.location.href = '../login.html';
     }
   </script>
+  <script>
+    function filterPrefs() {
+      var q = document.getElementById('search-pref').value.toLowerCase();
+      var status = document.getElementById('status-filter').value;
+      var rows = document.querySelectorAll('#prefTableBody tr');
+      rows.forEach(function (row) {
+        var name = row.cells[1].textContent.toLowerCase();
+        var rowStatus = row.cells[6].textContent.trim();
+        var matchSearch = !q || name.includes(q);
+        var matchStatus = !status || rowStatus === status;
+        row.style.display = (matchSearch && matchStatus) ? '' : 'none';
+      });
+    }
+  </script>
 </body>
+
 </html>
