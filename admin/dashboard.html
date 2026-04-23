@@ -143,7 +143,7 @@
 
     async function loadStats() {
       try {
-        const res = await fetch('/api/auth/stats', { credentials: 'include' });
+        const res = await fetch('/api/auth/admin/stats', { credentials: 'include' });
         const data = await res.json();
         if (data.ok) {
           document.getElementById('stat-students').textContent  = data.totalStudents;

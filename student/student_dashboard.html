@@ -93,16 +93,16 @@
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
             <div style="font-size:40px">📅</div>
             <div>
-              <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800">March 23, 2026</div>
+              <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800">May 12, 2026</div>
               <div class="text-sm text-muted">11:59 PM — Final submission</div>
             </div>
           </div>
           <div class="progress-track" style="margin-bottom:8px">
-            <div class="progress-fill amber" style="width:65%"></div>
+            <div class="progress-fill amber" id="deadline-progress" style="width:0%"></div>
           </div>
           <div class="flex-between text-sm text-muted">
-            <span>65% of window used</span>
-            <span>5 days remaining</span>
+            <span id="deadline-pct">Calculating...</span>
+            <span id="deadline-days"></span>
           </div>
         </div>
 
@@ -249,6 +249,24 @@
         document.getElementById('stat-allocated').textContent = '—';
       }
     })();
+
+    function updateDeadlineProgress() {
+      const start    = new Date("2026-04-01T00:00:00");
+      const deadline = new Date("2026-05-12T23:59:00");
+      const now      = new Date();
+      const total    = deadline - start;
+      const elapsed  = Math.max(0, now - start);
+      const pct      = Math.min(100, Math.round((elapsed / total) * 100));
+      const msLeft   = deadline - now;
+      const daysLeft = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
+      const bar    = document.getElementById("deadline-progress");
+      const pctEl  = document.getElementById("deadline-pct");
+      const daysEl = document.getElementById("deadline-days");
+      if (bar)    bar.style.width = pct + "%";
+      if (pctEl)  pctEl.textContent = pct + "% of window used";
+      if (daysEl) daysEl.textContent = daysLeft > 0 ? daysLeft + " day" + (daysLeft !== 1 ? "s" : "") + " remaining" : "Deadline passed";
+    }
+    updateDeadlineProgress();
 
     async function handleLogout() {
       await logoutUser();
