@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard — ElectPro Student</title>
   <link rel="stylesheet" href="../style.css" />
 </head>
-
 <body>
-
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
@@ -17,23 +14,13 @@
       <div class="brand-name">ElectPro</div>
       <div class="brand-sub">Student Portal</div>
     </div>
-
     <nav class="sidebar-nav">
       <div class="nav-section-label">Menu</div>
-      <a href="student_dashboard.html" class="nav-link active">
-        <span class="icon">🏠</span> Dashboard
-      </a>
-      <a href="select_electives.html" class="nav-link">
-        <span class="icon">📚</span> Select Electives
-      </a>
-      <a href="preferences.html" class="nav-link">
-        <span class="icon">📋</span> My Preferences
-      </a>
-      <a href="profile.html" class="nav-link">
-        <span class="icon">👤</span> Profile
-      </a>
+      <a href="student_dashboard.html" class="nav-link active"><span class="icon">🏠</span> Dashboard</a>
+      <a href="select_electives.html" class="nav-link"><span class="icon">📚</span> Select Electives</a>
+      <a href="preferences.html" class="nav-link"><span class="icon">📋</span> My Preferences</a>
+      <a href="profile.html" class="nav-link"><span class="icon">👤</span> Profile</a>
     </nav>
-
     <div class="sidebar-footer">
       <div class="user-chip">
         <div class="avatar" id="avatarInitials">??</div>
@@ -45,42 +32,36 @@
     </div>
   </aside>
 
-
   <div class="main">
     <header class="topbar">
       <div class="flex gap-3" style="align-items:center">
-        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
-          <span></span><span></span><span></span>
-        </div>
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()"><span></span><span></span><span></span></div>
         <h1 class="page-title">Dashboard</h1>
       </div>
       <div class="topbar-right">
         <span class="badge-pill badge-amber">Selection Open</span>
-        <span style="font-size:20px;cursor:pointer">🔔</span>
         <button class="btn btn-danger btn-sm" onclick="handleLogout()">🚪 Logout</button>
       </div>
     </header>
 
     <main class="content">
 
-
       <div class="mb-8 fade-up fade-up-1">
         <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px">
-          Good morning, <span id="greetName"></span> 👋
+          Welcome, <span id="greetName"></span> 👋
         </h2>
         <p class="text-secondary text-sm">Here's a summary of your elective activity this semester.</p>
       </div>
 
-
       <div class="stats-grid fade-up fade-up-2">
         <div class="stat-card blue">
           <div class="stat-icon">📚</div>
-          <div class="stat-value">12</div>
+          <div class="stat-value" id="stat-electives">—</div>
           <div class="stat-label">Available Electives</div>
         </div>
         <div class="stat-card green">
           <div class="stat-icon">✅</div>
-          <div class="stat-value">3</div>
+          <div class="stat-value" id="stat-prefs">—</div>
           <div class="stat-label">Preferences Saved</div>
         </div>
         <div class="stat-card amber">
@@ -90,14 +71,23 @@
         </div>
         <div class="stat-card purple">
           <div class="stat-icon">🎯</div>
-          <div class="stat-value">—</div>
+          <div class="stat-value" id="stat-allocated">—</div>
           <div class="stat-label">Allocated Elective</div>
         </div>
       </div>
 
+      <!-- Allocation Result Banner (shown after results published) -->
+      <div id="allocation-banner" style="display:none" class="card fade-up fade-up-2" id="alloc-banner">
+        <div class="flex gap-3" style="align-items:center">
+          <span style="font-size:32px" id="alloc-icon">🎯</span>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700" id="alloc-title">Allocation Result</div>
+            <div class="text-sm text-secondary" id="alloc-msg">—</div>
+          </div>
+        </div>
+      </div>
+
       <div class="grid-2 fade-up fade-up-3">
-
-
         <div class="card">
           <div class="card-title">Selection Deadline</div>
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
@@ -116,7 +106,6 @@
           </div>
         </div>
 
-
         <div class="card">
           <div class="card-title">Your Progress</div>
           <div style="display:flex;flex-direction:column;gap:16px">
@@ -126,11 +115,11 @@
             </div>
             <div class="flex-between">
               <span class="text-sm" style="color:var(--text-secondary)">Preferences Submitted</span>
-              <span class="badge-pill badge-green">Done</span>
+              <span class="badge-pill" id="pref-status" style="background:var(--bg-secondary);color:var(--text-muted)">Pending</span>
             </div>
             <div class="flex-between">
               <span class="text-sm" style="color:var(--text-secondary)">Allocation Result</span>
-              <span class="badge-pill badge-amber">Pending</span>
+              <span class="badge-pill" id="alloc-status" style="background:var(--bg-secondary);color:var(--text-muted)">Pending</span>
             </div>
             <div class="flex-between">
               <span class="text-sm" style="color:var(--text-secondary)">Final Confirmation</span>
@@ -141,7 +130,6 @@
       </div>
 
       <div class="divider fade-up fade-up-4"></div>
-
 
       <div class="fade-up fade-up-4">
         <div class="flex-between mb-4">
@@ -160,31 +148,8 @@
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td><span class="badge-pill badge-blue">#1</span></td>
-                <td>Machine Learning</td>
-                <td>CSE</td>
-                <td>3</td>
-                <td>8</td>
-                <td><span class="badge-pill badge-green">Open</span></td>
-              </tr>
-              <tr>
-                <td><span class="badge-pill badge-blue">#2</span></td>
-                <td>Cloud Computing</td>
-                <td>CSE</td>
-                <td>3</td>
-                <td>12</td>
-                <td><span class="badge-pill badge-green">Open</span></td>
-              </tr>
-              <tr>
-                <td><span class="badge-pill badge-blue">#3</span></td>
-                <td>IoT Systems</td>
-                <td>ECE</td>
-                <td>2</td>
-                <td>3</td>
-                <td><span class="badge-pill badge-amber">Filling Fast</span></td>
-              </tr>
+            <tbody id="prefTableBody">
+              <tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-muted)">No preferences saved yet</td></tr>
             </tbody>
           </table>
         </div>
@@ -193,39 +158,100 @@
     </main>
   </div>
 
-
-  <div class="toast" id="toast">
-    <span class="toast-icon">✅</span>
-    <span id="toast-msg">Action completed.</span>
-  </div>
-
+  <div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✅</span><span id="toast-msg">Action completed.</span></div>
 
   <script src="../auth.js"></script>
   <script src="../script.js"></script>
   <script>
-    // Protect page - must be logged in as student
-    const session = requireAuth('student', '../login.html');
-    if (session) {
-      const firstName = session.name.split(' ')[0];
-      const initials  = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    (async () => {
+      const session = await requireAuth('student', '../login.html');
+      if (!session) return;
 
-      // Greeting
-      const greet = document.getElementById('greetName');
-      if (greet) greet.textContent = firstName;
+      // Fill sidebar and greeting
+      const initials = session.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      document.getElementById('avatarInitials').textContent = initials;
+      document.getElementById('sidebarName').textContent    = session.name;
+      document.getElementById('sidebarMeta').textContent    = (session.branch || '') + ' — Sem ' + (session.semester || '');
+      document.getElementById('greetName').textContent      = session.name.split(' ')[0];
 
-      // Sidebar name + meta
-      const sidebarName = document.getElementById('sidebarName');
-      const sidebarMeta = document.getElementById('sidebarMeta');
-      if (sidebarName) sidebarName.textContent = session.name;
-      if (sidebarMeta) sidebarMeta.textContent = (session.branch || '') + ' — Sem ' + (session.semester || '');
+      // Load electives count and preferences
+      const [electRes, prefRes, allocRes] = await Promise.all([
+        fetch('/api/auth/electives', { credentials: 'include' }).then(r => r.json()),
+        fetch('/api/auth/get-preferences', { credentials: 'include' }).then(r => r.json()),
+        fetch('/api/auth/my-allocation', { credentials: 'include' }).then(r => r.json())
+      ]);
 
-      // Avatar initials
-      const avatar = document.getElementById('avatarInitials');
-      if (avatar) avatar.textContent = initials;
-    }
+      // Available electives count
+      const electives = electRes.ok ? electRes.electives : [];
+      document.getElementById('stat-electives').textContent = electives.length;
+
+      // Saved preferences
+      const prefs = prefRes.ok ? (prefRes.preferences || []) : [];
+      document.getElementById('stat-prefs').textContent = prefs.length;
+
+      if (prefs.length > 0) {
+        document.getElementById('pref-status').textContent = 'Done';
+        document.getElementById('pref-status').className = 'badge-pill badge-green';
+      }
+
+      // Render preference table
+      if (prefs.length > 0) {
+        const tbody = document.getElementById('prefTableBody');
+        tbody.innerHTML = prefs.map((id, idx) => {
+          const e = electives.find(el => el.id == id);
+          if (!e) return '';
+          const seats = parseInt(e.seats);
+          const seatStatus = seats > 10
+            ? '<span class="badge-pill badge-green">Open</span>'
+            : seats > 0
+              ? '<span class="badge-pill badge-amber">Filling Fast</span>'
+              : '<span class="badge-pill badge-red">Full</span>';
+          return `<tr>
+            <td><span class="badge-pill badge-blue">#${idx+1}</span></td>
+            <td>${e.name}</td>
+            <td>${e.department || '—'}</td>
+            <td>${e.credits}</td>
+            <td>${e.seats}</td>
+            <td>${seatStatus}</td>
+          </tr>`;
+        }).join('');
+      }
+
+      // Allocation result
+      if (allocRes.ok && allocRes.published) {
+        const banner = document.getElementById('allocation-banner');
+        banner.style.display = 'block';
+        if (allocRes.status === 'Allocated') {
+          const a = allocRes.allocation;
+          document.getElementById('alloc-icon').textContent  = '🎉';
+          document.getElementById('alloc-title').textContent = 'Congratulations! You are Allocated';
+          document.getElementById('alloc-msg').textContent   = `You have been allocated: ${a.elective_name} (${a.department}) — ${a.credits} credits | Preference #${a.preference_num}`;
+          banner.style.borderColor  = 'var(--green)';
+          document.getElementById('alloc-status').textContent = 'Allocated';
+          document.getElementById('alloc-status').className  = 'badge-pill badge-green';
+          document.getElementById('stat-allocated').textContent = a.elective_name;
+        } else if (allocRes.status === 'Waitlisted') {
+          document.getElementById('alloc-icon').textContent  = '⏳';
+          document.getElementById('alloc-title').textContent = 'You are on the Waitlist';
+          document.getElementById('alloc-msg').textContent   = 'All your preferred electives are full. You have been waitlisted for your first choice.';
+          banner.style.borderColor  = 'var(--amber)';
+          document.getElementById('alloc-status').textContent = 'Waitlisted';
+          document.getElementById('alloc-status').className  = 'badge-pill badge-amber';
+          document.getElementById('stat-allocated').textContent = 'Waitlisted';
+        } else {
+          document.getElementById('alloc-icon').textContent  = '❌';
+          document.getElementById('alloc-title').textContent = 'Not Allocated';
+          document.getElementById('alloc-msg').textContent   = 'You were not allocated to any elective. Please contact your administrator.';
+          document.getElementById('alloc-status').textContent = 'Not Allocated';
+          document.getElementById('stat-allocated').textContent = 'N/A';
+        }
+      } else {
+        document.getElementById('stat-allocated').textContent = '—';
+      }
+    })();
 
     async function handleLogout() {
-      logoutUser();
+      await logoutUser();
       window.location.href = '../login.html';
     }
   </script>

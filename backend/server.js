@@ -45,6 +45,16 @@ async function initDB() {
     await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS advisor VARCHAR(100)`);
     await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS preferences TEXT`);
 
+    // Settings table for publish/unpublish
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS settings (
+        key   VARCHAR(100) PRIMARY KEY,
+        value TEXT
+      )
+    `);
+    // Ensure results_published key exists
+    await pool.query(`INSERT INTO settings (key,value) VALUES ('results_published','false') ON CONFLICT (key) DO NOTHING`);
+
     // Create electives table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS electives (
